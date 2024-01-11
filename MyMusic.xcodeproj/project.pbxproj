@@ -27,6 +27,11 @@
 		A8694CDC2B4E72D0006A4914 /* RxTest-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = A8694CDB2B4E72D0006A4914 /* RxTest-Dynamic */; };
 		A8694CDD2B4E72D0006A4914 /* RxTest-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = A8694CDB2B4E72D0006A4914 /* RxTest-Dynamic */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		A8694CDF2B4E7398006A4914 /* Constants+Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CDE2B4E7398006A4914 /* Constants+Home.swift */; };
+		A8694CE12B4FB890006A4914 /* UIViewController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CE02B4FB890006A4914 /* UIViewController+Rx.swift */; };
+		A8694CE32B4FB8B1006A4914 /* Observable+Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CE22B4FB8B1006A4914 /* Observable+Operation.swift */; };
+		A8694CE82B4FBB88006A4914 /* PermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CE72B4FBB88006A4914 /* PermissionViewController.swift */; };
+		A8694CEB2B4FD3F7006A4914 /* MusicUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CEA2B4FD3F7006A4914 /* MusicUseCase.swift */; };
+		A8694CED2B4FD45A006A4914 /* PermissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CEC2B4FD45A006A4914 /* PermissionViewModel.swift */; };
 		A8F2063C2B4E0B15007A5935 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F2063B2B4E0B15007A5935 /* AppDelegate.swift */; };
 		A8F2063E2B4E0B15007A5935 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F2063D2B4E0B15007A5935 /* SceneDelegate.swift */; };
 		A8F206452B4E0B16007A5935 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8F206442B4E0B16007A5935 /* Assets.xcassets */; };
@@ -99,6 +104,11 @@
 		A8694CCA2B4E728D006A4914 /* MyMusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyMusicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8694CCC2B4E728D006A4914 /* MyMusicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMusicTests.swift; sourceTree = "<group>"; };
 		A8694CDE2B4E7398006A4914 /* Constants+Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants+Home.swift"; sourceTree = "<group>"; };
+		A8694CE02B4FB890006A4914 /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
+		A8694CE22B4FB8B1006A4914 /* Observable+Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+Operation.swift"; sourceTree = "<group>"; };
+		A8694CE72B4FBB88006A4914 /* PermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionViewController.swift; sourceTree = "<group>"; };
+		A8694CEA2B4FD3F7006A4914 /* MusicUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicUseCase.swift; sourceTree = "<group>"; };
+		A8694CEC2B4FD45A006A4914 /* PermissionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionViewModel.swift; sourceTree = "<group>"; };
 		A8F206382B4E0B15007A5935 /* MyMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8F2063B2B4E0B15007A5935 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8F2063D2B4E0B15007A5935 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -171,6 +181,8 @@
 			isa = PBXGroup;
 			children = (
 				A8694C602B4E5F81006A4914 /* UIViewController+Preview.swift */,
+				A8694CE02B4FB890006A4914 /* UIViewController+Rx.swift */,
+				A8694CE22B4FB8B1006A4914 /* Observable+Operation.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -188,6 +200,31 @@
 				A8694CCC2B4E728D006A4914 /* MyMusicTests.swift */,
 			);
 			path = MyMusicTests;
+			sourceTree = "<group>";
+		};
+		A8694CE42B4FBB5E006A4914 /* Permission */ = {
+			isa = PBXGroup;
+			children = (
+				A8694CE62B4FBB6C006A4914 /* ViewModel */,
+				A8694CE52B4FBB6A006A4914 /* View */,
+			);
+			path = Permission;
+			sourceTree = "<group>";
+		};
+		A8694CE52B4FBB6A006A4914 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				A8694CE72B4FBB88006A4914 /* PermissionViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		A8694CE62B4FBB6C006A4914 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A8694CEC2B4FD45A006A4914 /* PermissionViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		A8F2062F2B4E0B15007A5935 = {
@@ -281,6 +318,7 @@
 				A8F2066B2B4E0C6E007A5935 /* TabBar */,
 				A8F206702B4E0C95007A5935 /* Home */,
 				A8F206772B4E0D0D007A5935 /* Setting */,
+				A8694CE42B4FBB5E006A4914 /* Permission */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -396,6 +434,7 @@
 			children = (
 				A8F206862B4E0D83007A5935 /* HomeUseCase.swift */,
 				A8F206882B4E0D87007A5935 /* SettingUseCase.swift */,
+				A8694CEA2B4FD3F7006A4914 /* MusicUseCase.swift */,
 			);
 			path = UseCase;
 			sourceTree = "<group>";
@@ -632,16 +671,21 @@
 				A8F2066D2B4E0C7C007A5935 /* TabBarCoordinator.swift in Sources */,
 				A8F206642B4E0C3A007A5935 /* DataTransfrerService.swift in Sources */,
 				A8F2063C2B4E0B15007A5935 /* AppDelegate.swift in Sources */,
+				A8694CE32B4FB8B1006A4914 /* Observable+Operation.swift in Sources */,
+				A8694CEB2B4FD3F7006A4914 /* MusicUseCase.swift in Sources */,
 				A8F2068E2B4E0D9F007A5935 /* SettingRepository.swift in Sources */,
 				A8F206872B4E0D83007A5935 /* HomeUseCase.swift in Sources */,
 				A8F2065D2B4E0BFC007A5935 /* AppFlowCoordinator.swift in Sources */,
+				A8694CE12B4FB890006A4914 /* UIViewController+Rx.swift in Sources */,
 				A8F206682B4E0C54007A5935 /* Endpoint.swift in Sources */,
 				A8F206812B4E0D35007A5935 /* SettingViewController.swift in Sources */,
 				A8F206952B4E0DB9007A5935 /* DefaultHomeRepository.swift in Sources */,
 				A8F2066F2B4E0C81007A5935 /* TabBarPage.swift in Sources */,
 				A8F2069D2B4E0E9E007A5935 /* NavigationView.swift in Sources */,
+				A8694CED2B4FD45A006A4914 /* PermissionViewModel.swift in Sources */,
 				A8F206892B4E0D87007A5935 /* SettingUseCase.swift in Sources */,
 				A8F206C92B4E38BE007A5935 /* NetworkManager.swift in Sources */,
+				A8694CE82B4FBB88006A4914 /* PermissionViewController.swift in Sources */,
 				A8F2063E2B4E0B15007A5935 /* SceneDelegate.swift in Sources */,
 				A8694C612B4E5F81006A4914 /* UIViewController+Preview.swift in Sources */,
 				A8F206972B4E0DC0007A5935 /* DefaultSettingRepository.swift in Sources */,
