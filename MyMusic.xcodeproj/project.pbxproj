@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		664F99E52B5037AC0005A95D /* Constants+Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664F99E42B5037AC0005A95D /* Constants+Permission.swift */; };
 		A8694C612B4E5F81006A4914 /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694C602B4E5F81006A4914 /* UIViewController+Preview.swift */; };
 		A8694CA62B4E7039006A4914 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = A8694CA52B4E7039006A4914 /* RxCocoa */; };
 		A8694CA82B4E7039006A4914 /* RxCocoa-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = A8694CA72B4E7039006A4914 /* RxCocoa-Dynamic */; };
@@ -100,6 +101,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		664F99E32B50324F0005A95D /* Environment.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Environment.xcconfig; sourceTree = "<group>"; };
+		664F99E42B5037AC0005A95D /* Constants+Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants+Permission.swift"; sourceTree = "<group>"; };
 		A8694C602B4E5F81006A4914 /* UIViewController+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Preview.swift"; sourceTree = "<group>"; };
 		A8694CCA2B4E728D006A4914 /* MyMusicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyMusicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8694CCC2B4E728D006A4914 /* MyMusicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMusicTests.swift; sourceTree = "<group>"; };
@@ -140,7 +143,6 @@
 		A8F206962B4E0DC0007A5935 /* DefaultSettingRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSettingRepository.swift; sourceTree = "<group>"; };
 		A8F2069C2B4E0E9E007A5935 /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
 		A8F2069F2B4E0EE5007A5935 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		A8F206A12B4E14D9007A5935 /* Environment.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Environment.xcconfig; sourceTree = "<group>"; };
 		A8F206C82B4E38BE007A5935 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -277,7 +279,7 @@
 				A8F206442B4E0B16007A5935 /* Assets.xcassets */,
 				A8F206462B4E0B16007A5935 /* LaunchScreen.storyboard */,
 				A8F206492B4E0B16007A5935 /* Info.plist */,
-				A8F206A12B4E14D9007A5935 /* Environment.xcconfig */,
+				664F99E32B50324F0005A95D /* Environment.xcconfig */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -424,7 +426,6 @@
 			isa = PBXGroup;
 			children = (
 				A8F206732B4E0D03007A5935 /* HomeViewController.swift */,
-				A8F206982B4E0E81007A5935 /* Subviews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -489,13 +490,6 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
-		A8F206982B4E0E81007A5935 /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Subviews;
-			sourceTree = "<group>";
-		};
 		A8F2069B2B4E0E90007A5935 /* ReuseableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -509,6 +503,7 @@
 			children = (
 				A8F2069F2B4E0EE5007A5935 /* Constants.swift */,
 				A8694CDE2B4E7398006A4914 /* Constants+Home.swift */,
+				664F99E42B5037AC0005A95D /* Constants+Permission.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -681,6 +676,7 @@
 				A8F206812B4E0D35007A5935 /* SettingViewController.swift in Sources */,
 				A8F206952B4E0DB9007A5935 /* DefaultHomeRepository.swift in Sources */,
 				A8F2066F2B4E0C81007A5935 /* TabBarPage.swift in Sources */,
+				664F99E52B5037AC0005A95D /* Constants+Permission.swift in Sources */,
 				A8F2069D2B4E0E9E007A5935 /* NavigationView.swift in Sources */,
 				A8694CED2B4FD45A006A4914 /* PermissionViewModel.swift in Sources */,
 				A8F206892B4E0D87007A5935 /* SettingUseCase.swift in Sources */,
@@ -717,6 +713,7 @@
 /* Begin XCBuildConfiguration section */
 		A8694CD12B4E728D006A4914 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 664F99E32B50324F0005A95D /* Environment.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -735,6 +732,7 @@
 		};
 		A8694CD22B4E728D006A4914 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 664F99E32B50324F0005A95D /* Environment.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -753,7 +751,7 @@
 		};
 		A8F2064A2B4E0B16007A5935 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8F206A12B4E14D9007A5935 /* Environment.xcconfig */;
+			baseConfigurationReference = 664F99E32B50324F0005A95D /* Environment.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -817,7 +815,7 @@
 		};
 		A8F2064B2B4E0B16007A5935 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8F206A12B4E14D9007A5935 /* Environment.xcconfig */;
+			baseConfigurationReference = 664F99E32B50324F0005A95D /* Environment.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -851,7 +849,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -874,7 +872,7 @@
 		};
 		A8F2064D2B4E0B16007A5935 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8F206A12B4E14D9007A5935 /* Environment.xcconfig */;
+			baseConfigurationReference = 664F99E32B50324F0005A95D /* Environment.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -894,6 +892,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.junhyeok.MyMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -907,7 +906,7 @@
 		};
 		A8F2064E2B4E0B16007A5935 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8F206A12B4E14D9007A5935 /* Environment.xcconfig */;
+			baseConfigurationReference = 664F99E32B50324F0005A95D /* Environment.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -927,6 +926,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.junhyeok.MyMusic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

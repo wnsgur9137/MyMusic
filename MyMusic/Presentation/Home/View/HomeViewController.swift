@@ -115,11 +115,9 @@ extension HomeViewController {
             
             contentView.heightAnchor.constraint(equalToConstant: 1000),
             
-            
             navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationView.topAnchor.constraint(equalTo: view.topAnchor),
             navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
             
             recentlyPlayedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             recentlyPlayedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
