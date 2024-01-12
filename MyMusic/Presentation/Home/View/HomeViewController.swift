@@ -15,6 +15,8 @@ protocol HomeViewControllerDependencies {
 
 final class HomeViewController: UIViewController {
     
+    private let alertBuilder: AlertBuilder
+    
     private let navigationView: NavigationView = {
         let navigationView = NavigationView(title: "Home")
         navigationView.translatesAutoresizingMaskIntoConstraints = false
@@ -57,26 +59,37 @@ final class HomeViewController: UIViewController {
         return collectionView
     }()
     
-    private var viewModel: HomeViewModel?
+    private var viewModel: HomeViewModel
     private let disposeBag = DisposeBag()
     
     // MARK: - Life cycle
     
-    static func create(with viewModel: HomeViewModel) -> HomeViewController {
-        let viewController = HomeViewController()
-        viewController.viewModel = viewModel
+    static func create(with viewModel: HomeViewModel,
+                       alertBuilder: AlertBuilder = DefaultAlertBuilder()) -> HomeViewController {
+        let viewController = HomeViewController(with: viewModel, alertBuilder: alertBuilder)
         return viewController
+    }
+    
+    init(with viewModel: HomeViewModel,
+         alertBuilder: AlertBuilder) {
+        self.viewModel = viewModel
+        self.alertBuilder = alertBuilder
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func loadView() {
         super.loadView()
-        viewModel?.recentlyPlayed
+        viewModel.recentlyPlayed
             .drive{ response in
                 print(response)
             }
             .disposed(by: disposeBag)
         
-        viewModel?.musicAuth
+        viewModel.musicAuth
             .drive { isAuthorized in
                 guard !isAuthorized else { return }
                 let useCase = DefaultMusicUseCase()
@@ -86,8 +99,8 @@ final class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel?.requestPermission(rx.viewDidLoad)
-        viewModel?.viewDidLoad(rx.viewDidLoad)
+        viewModel.requestPermission(rx.viewDidLoad)
+        viewModel.viewDidLoad(rx.viewDidLoad)
     }
     
     override func viewDidLoad() {
@@ -95,6 +108,10 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = .background
         addSubviews()
         setupLayoutConstraints()
+        
+        alertBuilder.set(alertType: .singleButton)
+        alertBuilder.set(title: "Test")
+        alertBuilder.build(self)
     }
 }
 
@@ -142,10 +159,10 @@ extension HomeViewController {
 }
 
 #if DEBUG
-import SwiftUI
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        HomeViewController().toPreview()
-    }
-}
+//import SwiftUI
+//struct Preview: PreviewProvider {
+//    static var previews: some View {
+//        HomeViewController().toPreview()
+//    }
+//}
 #endif
