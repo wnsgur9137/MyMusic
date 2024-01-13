@@ -12,4 +12,5 @@ protocol MusicRepository {
     func fetchMusicAuthorization() async -> Result<Bool, Error>
     func saveMusicAuthorization(_ bool: Bool)
     func requestRecentlyPlayed() async -> Result<[RecentlyPlayedMusicItem], Error>
+    func requestRecommend() async -> Result<[MusicPersonalRecommendation], Error>
 }

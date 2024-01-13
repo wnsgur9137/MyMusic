@@ -10,7 +10,10 @@ import Foundation
 extension Constants {
     struct HomeViewController {
         static let recentlyPlayed = "Recently Played"
-        static let recentlySubtitle = "이런 곡들을 들으셨군요!"
+        static let recentlySubtitle = "이런 노래들을 들으셨군요!"
+        
+        static let recommedMusics = "Recommend Music"
+        static let recommendSubitlte = "이런 노래는 어때요?"
     }
     
     struct RecentlyPlayedCell {

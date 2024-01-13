@@ -24,13 +24,16 @@ protocol HomeViewModelOutput {
     var recentlyPlayed: Driver<Void> { get }
     var musicAuth: Driver<Bool> { get }
     var loadedPlayedMusicItemDriver: Driver<Void> { get }
+    var loadedRecommendMusicItemDriver: Driver<[String]> { get }
 }
 
 protocol HomeViewModel: HomeViewModelInput,
                         HomeViewModelOutput,
-                        HomeRecentlyCollectionViewDataSource { }
+                        HomeRecentlyCollectionViewDataSource,
+                        HomeRecommendCollectionViewDataSource { }
 
 final class DefaultHomeViewModel: HomeViewModel {
+//    typealias recommendMusicInfo = (id: MusicItemID, title: String)
     private let homeUseCase: HomeUseCase
     private let musicUseCase: MusicUseCase
     private let actions: HomeViewModelActions?
@@ -52,6 +55,12 @@ final class DefaultHomeViewModel: HomeViewModel {
         return loadedPlayedMusicItemRelay.asDriver(onErrorDriveWith: .never())
     }
     
+    private var recommendMusicItems: [MusicPersonalRecommendation] = []
+    private var loadedRecommendMusicItemRelay: PublishRelay<[String]> = .init()
+    var loadedRecommendMusicItemDriver: Driver<[String]> {
+        return loadedRecommendMusicItemRelay.asDriver(onErrorDriveWith: .never())
+    }
+    
     init(homeUseCase: HomeUseCase,
          musicUseCase: MusicUseCase,
          actions: HomeViewModelActions? = nil) {
@@ -59,23 +68,38 @@ final class DefaultHomeViewModel: HomeViewModel {
         self.musicUseCase = musicUseCase
         self.actions = actions
         
-        notificationCenter.addObserver(self, selector: #selector(loadRecentPlayed), name: .musicAuth, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(reloadData), name: .musicAuth, object: nil)
     }
     
-    @objc private func loadRecentPlayed() {
+    @objc func reloadData() {
         let auth = UserDefaults.standard.bool(forKey: "musicAuth")
         guard auth else { return }
+        loadRecentPlayed()
+        loadRecommend()
+    }
+    
+    private func loadRecentPlayed() {
         Task {
             let result = await musicUseCase.executeRecentlyPlayed()
             switch result {
             case .success(let items):
                 self.load(recentlyPlayedMusics: items)
-                items.forEach {
-                    print("🚨$0.artwork: \($0.artwork)")
-                }
                 
             case .failure(let error):
-                print("🚨error: \(error.localizedDescription)")
+                print("error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func loadRecommend() {
+        Task {
+            let result = await musicUseCase.executeRecommend()
+            switch result {
+            case .success(let items):
+                self.load(recommendMusics: items)
+                
+            case .failure(let error):
+                print("error: \(error.localizedDescription)")
             }
         }
     }
@@ -88,6 +112,15 @@ final class DefaultHomeViewModel: HomeViewModel {
     private func load(recentlyPlayedMusics items: [RecentlyPlayedMusicItem]) {
         self.recentlyPlayedMusicItems = items
         self.loadedPlayedMusicItemRelay.accept(Void())
+    }
+    
+    private func load(recommendMusics items: [MusicPersonalRecommendation]) {
+        self.recommendMusicItems = items.filter{ $0.title != "Recently Played" }
+        let titles = self.recommendMusicItems.map {
+//            (id: $0.id, title: $0.title ?? Constants.HomeViewController.recommedMusics)
+            $0.title ?? Constants.HomeViewController.recommedMusics
+        }
+        self.loadedRecommendMusicItemRelay.accept(titles)
     }
 }
 
@@ -107,6 +140,7 @@ extension DefaultHomeViewModel {
         viewDidLoad
             .subscribe(onNext: {_ in
                 self.loadRecentPlayed()
+                self.loadRecommend()
             })
             .disposed(by: disposeBag)
     }
@@ -116,12 +150,13 @@ extension DefaultHomeViewModel {
             .subscribe(onNext: { _ in
                 guard self.isMusicAuth else { return }
                 self.loadRecentPlayed()
+                self.loadRecommend()
             })
             .disposed(by: disposeBag)
     }
 }
 
-// MARK: - Home RecentlryCollectionView DataSource
+// MARK: - RecentlryCollectionView DataSource
 extension DefaultHomeViewModel: HomeRecentlyCollectionViewDataSource {
     func numberOfItems() -> Int {
         return recentlyPlayedMusicItems.count
@@ -129,5 +164,16 @@ extension DefaultHomeViewModel: HomeRecentlyCollectionViewDataSource {
     
     func cellForItem(at index: Int) -> RecentlyPlayedMusicItem {
         return recentlyPlayedMusicItems[index]
+    }
+}
+
+// MARK: - RecommendCollectionView DataSource
+extension DefaultHomeViewModel: HomeRecommendCollectionViewDataSource {
+    func numberOfItems(tag index: Int) -> Int {
+        return recommendMusicItems[index].items.count
+    }
+    
+    func cellForItem(tag index: Int, at itemIndex: Int) -> MusicPersonalRecommendation.Item {
+        return recommendMusicItems[index].items[itemIndex]
     }
 }

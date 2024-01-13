@@ -9,6 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SkeletonView
+import MusicKit
 
 final class HomeViewController: UIViewController {
     
@@ -61,6 +62,8 @@ final class HomeViewController: UIViewController {
         return collectionView
     }()
     
+    private var recommendCollectionViews: [UICollectionView] = []
+    
     private var viewModel: HomeViewModel
     private let homeContentViewBuilder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
     private let disposeBag = DisposeBag()
@@ -79,7 +82,9 @@ final class HomeViewController: UIViewController {
         self.adapter = HomeAdapter(
             recentlyCollectionView: self.recentlyPlayedCollectionView,
             recentlyCollectionViewDataSource: viewModel,
-            recentlyCollectionViewDelegate: self)
+            recentlyCollectionViewDelegate: self,
+            recommendCollectionViewDataSource: viewModel,
+            recommendCollectionViewDelegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -88,12 +93,6 @@ final class HomeViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        viewModel.recentlyPlayed
-            .drive{ response in
-                print(response)
-            }
-            .disposed(by: disposeBag)
-        
         bind()
     }
     
@@ -101,25 +100,46 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .background
         
-        setupRecentlyPlayedView()
-        
         addSubviews()
         setupLayoutConstraints()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        print("viewWillAppear")
+    private func makeRecommendView(titles: [String]) {
+        let builder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
+        for (index, title) in titles.enumerated() {
+            builder.set(title: title)
+            builder.set(titleColor: .dynamicBlack)
+            builder.set(subTitle: Constants.HomeViewController.recommendSubitlte)
+            builder.set(subtitleColor: .dynamicBlack)
+            builder.set(backgroundColor: .background)
+            builder.set(height: 300)
+            let view = builder.make()
+            builder.reset()
+            
+            let recommendCollectionView = makeRecommendCollectionView()
+            recommendCollectionView.tag = index
+            
+            view.addSubview(recommendCollectionView)
+            recommendCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            recommendCollectionView.topAnchor.constraint(equalTo: view.centerYAnchor, constant: -30.0).isActive = true
+            recommendCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            recommendCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24.0).isActive = true
+            
+            self.adapter?.add(recommendCollectionView)
+            recommendCollectionViews.append(recommendCollectionView)
+            contentStackView.addArrangedSubview(view)
+        }
     }
     
-    private func setupRecentlyPlayedView() {
-        
-    }
-}
-
-extension HomeViewController: HomeRecentlyCollectionViewDelegate {
-    func didSelectItem(at index: Int) {
-        print("index: \(index)")
+    private func makeRecommendCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+        collectionView.isSkeletonable = true
+        return collectionView
     }
 }
 
@@ -135,6 +155,26 @@ extension HomeViewController {
                 self?.recentlyPlayedCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
+        
+        viewModel.loadedRecommendMusicItemDriver
+            .drive(onNext: { [weak self] recommendTitles in
+                self?.makeRecommendView(titles: recommendTitles)
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - RecentlryCollectionView Delegate
+extension HomeViewController: HomeRecentlyCollectionViewDelegate {
+    func didSelectItem(at index: Int) {
+        print("index: \(index)")
+    }
+}
+
+// MARK: - RecommendCollectionView Delegate
+extension HomeViewController: HomeRecommendCollectionViewDelegate {
+    func didSelectItem(tag index: Int, at itemIndex: Int) {
+        print("tag: \(index), item: \(itemIndex)")
     }
 }
 
@@ -161,14 +201,12 @@ extension HomeViewController {
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             recentlyPlayedCollectionView.leadingAnchor.constraint(equalTo: recentlyPlayedView.leadingAnchor),
             recentlyPlayedCollectionView.topAnchor.constraint(equalTo: recentlyPlayedView.centerYAnchor, constant: -30.0),
             recentlyPlayedCollectionView.trailingAnchor.constraint(equalTo: recentlyPlayedView.trailingAnchor),
             recentlyPlayedCollectionView.bottomAnchor.constraint(equalTo: recentlyPlayedView.bottomAnchor, constant: -24.0),
-            
-            contentView.heightAnchor.constraint(equalToConstant: 1000)
         ])
     }
 }

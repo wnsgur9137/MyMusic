@@ -37,8 +37,19 @@ extension DefaultMusicRepository: MusicRepository {
         do {
             let request = MusicRecentlyPlayedContainerRequest()
             let response = try await request.response()
-            var musicItems: [RecentlyPlayedMusicItem] = response.items.map{ $0 }
+            let musicItems: [RecentlyPlayedMusicItem] = response.items.map{ $0 }
             return .success(musicItems)
+        } catch {
+            return .failure(MusicKitError.loadError)
+        }
+    }
+    
+    func requestRecommend() async -> Result<[MusicPersonalRecommendation], Error> {
+        do {
+            let request = MusicPersonalRecommendationsRequest()
+            let response = try await request.response()
+            let items = response.recommendations.map { $0 }
+            return .success(items)
         } catch {
             return .failure(MusicKitError.loadError)
         }
