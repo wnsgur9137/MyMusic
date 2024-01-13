@@ -30,20 +30,23 @@ final class HomeViewController: UIViewController {
         return view
     }()
     
-    private let recentlyPlayedView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        return view
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 8.0
+        return stackView
     }()
     
-    private let recentlyPlayedLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Constants.HomeViewController.recentlyPlayed
-        label.font = Constants.Font.subtitleSemiBold1
-        label.textAlignment = .center
-        return label
+    private let recentlyPlayedView: HomeContentView = {
+        let builder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
+        builder.set(title: Constants.HomeViewController.recentlyPlayed)
+        builder.set(titleColor: .dynamicWhite)
+        builder.set(subTitle: Constants.HomeViewController.recentlySubtitle)
+        builder.set(subtitleColor: .dynamicWhite)
+        builder.set(backgroundColor: .dynamicBlack)
+        builder.set(height: 300)
+        return builder.make()
     }()
     
     private let recnetlyPlayedCollectionView: UICollectionView = {
@@ -54,6 +57,7 @@ final class HomeViewController: UIViewController {
     }()
     
     private var viewModel: HomeViewModel
+    private let homeContentViewBuilder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
     private let disposeBag = DisposeBag()
     
     // MARK: - Life cycle
@@ -86,6 +90,9 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
+        
+        setupRecentlyPlayedView()
+        
         addSubviews()
         setupLayoutConstraints()
     }
@@ -93,6 +100,10 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("viewWillAppear")
+    }
+    
+    private func setupRecentlyPlayedView() {
+        
     }
 }
 
@@ -121,18 +132,14 @@ extension HomeViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            contentView.heightAnchor.constraint(equalToConstant: 1000),
-            
             navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationView.topAnchor.constraint(equalTo: view.topAnchor),
             navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            recentlyPlayedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            recentlyPlayedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
-            recentlyPlayedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            recentlyPlayedLabel.centerXAnchor.constraint(equalTo: recentlyPlayedView.centerXAnchor),
-            recentlyPlayedLabel.topAnchor.constraint(equalTo: recentlyPlayedView.topAnchor, constant: 8.0),
+            contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
+            contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
 }
@@ -140,16 +147,13 @@ extension HomeViewController {
 // MARK: - Add subviews
 extension HomeViewController {
     private func addSubviews() {
-        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(recentlyPlayedView)
-        recentlyPlayedView.addSubview(recentlyPlayedLabel)
-        
+        contentView.addSubview(contentStackView)
+        contentStackView.addArrangedSubview(recentlyPlayedView)
         
         view.addSubview(navigationView)
     }
-    
 }
 
 #if DEBUG

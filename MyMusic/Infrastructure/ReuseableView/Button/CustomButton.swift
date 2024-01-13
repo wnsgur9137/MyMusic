@@ -29,7 +29,7 @@ final class CustomButton: UIButton {
     
     override var isEnabled: Bool {
         didSet {
-            self.containedButtonShadow = self.isEnabled
+            self.containedShadow = self.isEnabled
             let currentTitle = self.attributedTitle(for: .normal)?.string ?? ""
             let attributedTitle = NSAttributedString.button1(string: currentTitle, color: self.buttonTitleColor)
             UIView.animate(withDuration: 0.2) {
@@ -93,7 +93,7 @@ final class CustomButton: UIButton {
         UIView.animate(withDuration: 0.2,
                        delay: 0,
                        options: .allowUserInteraction) {
-            self.containedButtonShadow = false
+            self.containedShadow = false
         }
         return super.beginTracking(touch, with: event)
     }
@@ -125,14 +125,14 @@ final class CustomButton: UIButton {
         layer.cornerRadius = buttonCornerRadius
         layer.borderWidth = 0.2
         layer.borderColor = buttonBorderColor
-        containedButtonShadow = isEnabled
+        containedShadow = isEnabled
     }
     
     private func animateToNormal() {
         UIView.animate(withDuration: 0.2,
                        delay: 0,
                        options: .allowUserInteraction) {
-            self.containedButtonShadow = self.isEnabled
+            self.containedShadow = self.isEnabled
         }
     }
 }
