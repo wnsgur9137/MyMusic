@@ -6,6 +6,12 @@
 //
 
 import Foundation
+import MusicKit
+
+enum MusicKitError: Error {
+    case loadError
+    case accessApple
+}
 
 final class DefaultMusicRepository {
     private let dataTransferService: DataTransferService
@@ -25,5 +31,16 @@ extension DefaultMusicRepository: MusicRepository {
     
     func saveMusicAuthorization(_ bool: Bool) {
         userDefaultsStorage.saveMusicAuthorization(bool)
+    }
+    
+    func requestRecentlyPlayed() async -> Result<[RecentlyPlayedMusicItem], Error> {
+        do {
+            let request = MusicRecentlyPlayedContainerRequest()
+            let response = try await request.response()
+            var musicItems: [RecentlyPlayedMusicItem] = response.items.map{ $0 }
+            return .success(musicItems)
+        } catch {
+            return .failure(MusicKitError.loadError)
+        }
     }
 }

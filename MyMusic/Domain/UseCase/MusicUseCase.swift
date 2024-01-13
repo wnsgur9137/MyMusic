@@ -12,7 +12,7 @@ protocol MusicUseCase {
     func requestMusicAuthorization() async -> MusicAuthorization.Status
     func fetchMusicAuthorization() async -> Result<Bool, Error>
     func saveMusicAuthorization(_ bool: Bool)
-    func loadRecentlyPlayed()
+    func executeRecentlyPlayed() async -> Result<[RecentlyPlayedMusicItem], Error>
 }
 
 final class DefaultMusicUseCase: MusicUseCase {
@@ -33,16 +33,8 @@ extension DefaultMusicUseCase {
         return await MusicAuthorization.request()
     }
     
-    func loadRecentlyPlayed() {
-        Task {
-            do {
-                let recentlyPlayedRequest = MusicRecentlyPlayedContainerRequest()
-                let recentlyPlayedResponse = try await recentlyPlayedRequest.response()
-                print("recentlyPlayedResponse: \(recentlyPlayedResponse)")
-            } catch {
-                
-            }
-        }
+    func executeRecentlyPlayed() async -> Result<[RecentlyPlayedMusicItem], Error> {
+        return await musicRepository.requestRecentlyPlayed()
     }
     
     

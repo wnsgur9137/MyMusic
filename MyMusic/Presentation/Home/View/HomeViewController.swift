@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SkeletonView
 
 final class HomeViewController: UIViewController {
     
@@ -49,16 +50,21 @@ final class HomeViewController: UIViewController {
         return builder.make()
     }()
     
-    private let recnetlyPlayedCollectionView: UICollectionView = {
+    private let recentlyPlayedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+        collectionView.isSkeletonable = true
         return collectionView
     }()
     
     private var viewModel: HomeViewModel
     private let homeContentViewBuilder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
     private let disposeBag = DisposeBag()
+    private var adapter: HomeAdapter?
     
     // MARK: - Life cycle
     
@@ -70,6 +76,10 @@ final class HomeViewController: UIViewController {
     init(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        self.adapter = HomeAdapter(
+            recentlyCollectionView: self.recentlyPlayedCollectionView,
+            recentlyCollectionViewDataSource: viewModel,
+            recentlyCollectionViewDelegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -107,12 +117,24 @@ final class HomeViewController: UIViewController {
     }
 }
 
+extension HomeViewController: HomeRecentlyCollectionViewDelegate {
+    func didSelectItem(at index: Int) {
+        print("index: \(index)")
+    }
+}
+
 // MARK: - Bind
 extension HomeViewController {
     private func bind() {
         viewModel.requestPermission(rx.viewDidLoad)
         viewModel.viewDidLoad(rx.viewDidLoad)
         viewModel.viewWillAppear(rx.viewWillAppear)
+        
+        viewModel.loadedPlayedMusicItemDriver
+            .drive(onNext: { [weak self] _ in
+                self?.recentlyPlayedCollectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -139,7 +161,14 @@ extension HomeViewController {
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
             contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
+            recentlyPlayedCollectionView.leadingAnchor.constraint(equalTo: recentlyPlayedView.leadingAnchor),
+            recentlyPlayedCollectionView.topAnchor.constraint(equalTo: recentlyPlayedView.centerYAnchor, constant: -30.0),
+            recentlyPlayedCollectionView.trailingAnchor.constraint(equalTo: recentlyPlayedView.trailingAnchor),
+            recentlyPlayedCollectionView.bottomAnchor.constraint(equalTo: recentlyPlayedView.bottomAnchor, constant: -24.0),
+            
+            contentView.heightAnchor.constraint(equalToConstant: 1000)
         ])
     }
 }
@@ -151,6 +180,7 @@ extension HomeViewController {
         scrollView.addSubview(contentView)
         contentView.addSubview(contentStackView)
         contentStackView.addArrangedSubview(recentlyPlayedView)
+        recentlyPlayedView.addSubview(recentlyPlayedCollectionView)
         
         view.addSubview(navigationView)
     }

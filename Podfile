@@ -8,6 +8,8 @@ target 'MyMusic' do
   pod 'RxCocoa'
   pod 'RxGesture'
   pod 'Moya'
+  pod 'Kingfisher'
+  pod 'SkeletonView'
 
   target 'MyMusicTests' do
     inherit! :search_paths

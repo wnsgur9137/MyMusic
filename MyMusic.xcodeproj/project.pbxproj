@@ -20,6 +20,10 @@
 		6607873F2B529CEC00F4A94E /* MusicRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6607873E2B529CEC00F4A94E /* MusicRepository.swift */; };
 		660787472B52AACF00F4A94E /* HomeContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660787462B52AACF00F4A94E /* HomeContentView.swift */; };
 		6607874A2B52AECB00F4A94E /* HomeContentViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660787492B52AECB00F4A94E /* HomeContentViewBuilder.swift */; };
+		6607874E2B52BB1500F4A94E /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6607874D2B52BB1400F4A94E /* APIEndpoints.swift */; };
+		660787512B52C1E500F4A94E /* RecentlyPlayedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660787502B52C1E500F4A94E /* RecentlyPlayedCell.swift */; };
+		660787532B52C21D00F4A94E /* ReuseableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660787522B52C21D00F4A94E /* ReuseableProtocol.swift */; };
+		660787552B52C3EB00F4A94E /* HomeAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660787542B52C3EB00F4A94E /* HomeAdapter.swift */; };
 		664F99E52B5037AC0005A95D /* Constants+Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 664F99E42B5037AC0005A95D /* Constants+Permission.swift */; };
 		A8694C612B4E5F81006A4914 /* UIViewController+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694C602B4E5F81006A4914 /* UIViewController+Preview.swift */; };
 		A8694CCD2B4E728D006A4914 /* MyMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8694CCC2B4E728D006A4914 /* MyMusicTests.swift */; };
@@ -118,6 +122,10 @@
 		6607873E2B529CEC00F4A94E /* MusicRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicRepository.swift; sourceTree = "<group>"; };
 		660787462B52AACF00F4A94E /* HomeContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContentView.swift; sourceTree = "<group>"; };
 		660787492B52AECB00F4A94E /* HomeContentViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeContentViewBuilder.swift; sourceTree = "<group>"; };
+		6607874D2B52BB1400F4A94E /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
+		660787502B52C1E500F4A94E /* RecentlyPlayedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyPlayedCell.swift; sourceTree = "<group>"; };
+		660787522B52C21D00F4A94E /* ReuseableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseableProtocol.swift; sourceTree = "<group>"; };
+		660787542B52C3EB00F4A94E /* HomeAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAdapter.swift; sourceTree = "<group>"; };
 		664F99E32B50324F0005A95D /* Environment-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Environment-Release.xcconfig"; sourceTree = "<group>"; };
 		664F99E42B5037AC0005A95D /* Constants+Permission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Constants+Permission.swift"; sourceTree = "<group>"; };
 		6D4DF0A5A6992E3817E66D5D /* Pods_MyMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -265,6 +273,7 @@
 			isa = PBXGroup;
 			children = (
 				660787462B52AACF00F4A94E /* HomeContentView.swift */,
+				660787502B52C1E500F4A94E /* RecentlyPlayedCell.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -273,8 +282,17 @@
 			isa = PBXGroup;
 			children = (
 				660787492B52AECB00F4A94E /* HomeContentViewBuilder.swift */,
+				660787542B52C3EB00F4A94E /* HomeAdapter.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		6607874B2B52BAFB00F4A94E /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				6607874D2B52BB1400F4A94E /* APIEndpoints.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		A8694C5F2B4E5F4B006A4914 /* Extension */ = {
@@ -437,6 +455,7 @@
 			children = (
 				A8F206852B4E0D7C007A5935 /* UseCase */,
 				A8F2068A2B4E0D8A007A5935 /* Repositories */,
+				6607874B2B52BAFB00F4A94E /* Network */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -465,6 +484,7 @@
 			isa = PBXGroup;
 			children = (
 				A8F206572B4E0BAE007A5935 /* Coordinator.swift */,
+				660787522B52C21D00F4A94E /* ReuseableProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -833,6 +853,7 @@
 				A8694CF62B50AE5A006A4914 /* ButtonStyle.swift in Sources */,
 				A8694CDF2B4E7398006A4914 /* Constants+Home.swift in Sources */,
 				A8F206662B4E0C46007A5935 /* NetworkService.swift in Sources */,
+				660787532B52C21D00F4A94E /* ReuseableProtocol.swift in Sources */,
 				A8694CFC2B50B719006A4914 /* NSAttributedString+Operator.swift in Sources */,
 				A8694CFA2B50B17D006A4914 /* CALayer+Shadow.swift in Sources */,
 				A8F206612B4E0C1E007A5935 /* MainSceneDIContainer.swift in Sources */,
@@ -854,6 +875,7 @@
 				A8694CF82B50B152006A4914 /* UIView+Shadow.swift in Sources */,
 				A8F206642B4E0C3A007A5935 /* DataTransfrerService.swift in Sources */,
 				A8F2063C2B4E0B15007A5935 /* AppDelegate.swift in Sources */,
+				6607874E2B52BB1500F4A94E /* APIEndpoints.swift in Sources */,
 				A8694CE32B4FB8B1006A4914 /* Observable+Operation.swift in Sources */,
 				A8694CEB2B4FD3F7006A4914 /* MusicUseCase.swift in Sources */,
 				6607874A2B52AECB00F4A94E /* HomeContentViewBuilder.swift in Sources */,
@@ -876,6 +898,8 @@
 				A8694CE82B4FBB88006A4914 /* PermissionViewController.swift in Sources */,
 				660787472B52AACF00F4A94E /* HomeContentView.swift in Sources */,
 				A8F2063E2B4E0B15007A5935 /* SceneDelegate.swift in Sources */,
+				660787512B52C1E500F4A94E /* RecentlyPlayedCell.swift in Sources */,
+				660787552B52C3EB00F4A94E /* HomeAdapter.swift in Sources */,
 				6607873D2B529CCF00F4A94E /* DefaultMusicRepository.swift in Sources */,
 				A8694C612B4E5F81006A4914 /* UIViewController+Preview.swift in Sources */,
 				A8F206972B4E0DC0007A5935 /* DefaultSettingRepository.swift in Sources */,

@@ -49,8 +49,8 @@ final class PermissionViewController: UIViewController {
         return stackView
     }()
     
-    private let permissionButton: UIButton = {
-        let button = UIButton()
+    private let permissionButton: CustomButton = {
+        let button = CustomButton(style: .fill, size: .medium)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("권한 요청하기", for: .normal)
         button.setTitleColor(.dynamicBlack, for: .normal)
