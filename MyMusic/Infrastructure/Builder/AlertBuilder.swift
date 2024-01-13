@@ -97,6 +97,7 @@ extension DefaultAlertBuilder {
     func reset() {
         alertView = AlertBaseView()
         alertView.translatesAutoresizingMaskIntoConstraints = false
+        alertView.alpha = 0
     }
     
     func set(title: String) {

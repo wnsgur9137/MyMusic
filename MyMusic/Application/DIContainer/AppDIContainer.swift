@@ -23,9 +23,15 @@ final class AppDIContainer {
         return DefaultDataTransferService(with: apiDataNetwork)
     }()
     
+    // MARK: - UserDefaults
+    lazy var userDefaultsService: UserDefaultService = {
+        return UserDefaultService()
+    }()
+    
     // MARK: - DIContainers of scenes
     func makeMainSceneDIContainer() -> MainSceneDIContainer {
-        let dependencies = MainSceneDIContainer.Dependencies(apiDataTransferService: apiDataTransferService)
+        let dependencies = MainSceneDIContainer.Dependencies(apiDataTransferService: apiDataTransferService,
+                                                             userDefaultService: userDefaultsService)
         return MainSceneDIContainer(dependencies: dependencies)
     }
     

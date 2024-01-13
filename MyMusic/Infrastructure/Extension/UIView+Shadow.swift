@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIView {
-    var containedButtonShadow: Bool {
+    var containedShadow: Bool {
         set {
             if newValue {
                 layer.applySketchShadow(

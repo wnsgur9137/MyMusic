@@ -1,0 +1,14 @@
+//
+//  Environment-Debug.xcconfig
+//  MyMusic
+//
+//  Created by JUNHYEOK LEE on 1/13/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Pods/Target Support Files/Pods-MyMusic/Pods-MyMusic.debug.xcconfig"
+
+API_KEY = testApiKey
+API_BASE_URL = https:/$()/14.4.215.65

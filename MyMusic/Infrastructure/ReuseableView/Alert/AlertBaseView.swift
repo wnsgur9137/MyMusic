@@ -36,7 +36,7 @@ class AlertBaseView: UIView {
     }()
     
     let cancelButton: CustomButton = {
-        let button = CustomButton(style: .outline, size: .large)
+        let button = CustomButton(style: .cancel, size: .large)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.buttonTitle = "취소"
         return button
@@ -132,8 +132,8 @@ extension AlertBaseView {
         labelStackView.addArrangedSubview(titleLabel)
         labelStackView.addArrangedSubview(messageLabel)
         
-        buttonStackView.addArrangedSubview(confirmButton)
         buttonStackView.addArrangedSubview(cancelButton)
+        buttonStackView.addArrangedSubview(confirmButton)
         
         contentStackView.addArrangedSubview(labelStackView)
         contentStackView.addArrangedSubview(buttonStackView)

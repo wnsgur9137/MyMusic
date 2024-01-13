@@ -8,14 +8,10 @@
 import UIKit
 import RxSwift
 import RxCocoa
-
-protocol HomeViewControllerDependencies {
-    func makePermissionViewController()
-}
+import SkeletonView
+import MusicKit
 
 final class HomeViewController: UIViewController {
-    
-    private let alertBuilder: AlertBuilder
     
     private let navigationView: NavigationView = {
         let navigationView = NavigationView(title: "Home")
@@ -36,45 +32,59 @@ final class HomeViewController: UIViewController {
         return view
     }()
     
-    private let recentlyPlayedView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        return view
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 8.0
+        return stackView
     }()
     
-    private let recentlyPlayedLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = Constants.HomeViewController.recentlyPlayed
-        label.font = Constants.Font.subtitleSemiBold1
-        label.textAlignment = .center
-        return label
+    private let recentlyPlayedView: HomeContentView = {
+        let builder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
+        builder.set(title: Constants.HomeViewController.recentlyPlayed)
+        builder.set(titleColor: .dynamicWhite)
+        builder.set(subTitle: Constants.HomeViewController.recentlySubtitle)
+        builder.set(subtitleColor: .dynamicWhite)
+        builder.set(backgroundColor: .dynamicBlack)
+        builder.set(height: 300)
+        return builder.make()
     }()
     
-    private let recnetlyPlayedCollectionView: UICollectionView = {
+    private let recentlyPlayedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+        collectionView.isSkeletonable = true
         return collectionView
     }()
     
+    private var recommendCollectionViews: [UICollectionView] = []
+    
     private var viewModel: HomeViewModel
+    private let homeContentViewBuilder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
     private let disposeBag = DisposeBag()
+    private var adapter: HomeAdapter?
     
     // MARK: - Life cycle
     
-    static func create(with viewModel: HomeViewModel,
-                       alertBuilder: AlertBuilder = DefaultAlertBuilder()) -> HomeViewController {
-        let viewController = HomeViewController(with: viewModel, alertBuilder: alertBuilder)
+    static func create(with viewModel: HomeViewModel) -> HomeViewController {
+        let viewController = HomeViewController(with: viewModel)
         return viewController
     }
     
-    init(with viewModel: HomeViewModel,
-         alertBuilder: AlertBuilder) {
+    init(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        self.alertBuilder = alertBuilder
         super.init(nibName: nil, bundle: nil)
+        self.adapter = HomeAdapter(
+            recentlyCollectionView: self.recentlyPlayedCollectionView,
+            recentlyCollectionViewDataSource: viewModel,
+            recentlyCollectionViewDelegate: self,
+            recommendCollectionViewDataSource: viewModel,
+            recommendCollectionViewDelegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -83,35 +93,105 @@ final class HomeViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        viewModel.recentlyPlayed
-            .drive{ response in
-                print(response)
-            }
-            .disposed(by: disposeBag)
-        
-        viewModel.musicAuth
-            .drive { isAuthorized in
-                guard !isAuthorized else { return }
-                let useCase = DefaultMusicUseCase()
-                let viewModel = DefaultPermissionViewModel(musicUseCase: useCase)
-                let viewController = PermissionViewController(with: viewModel)
-                self.present(viewController, animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
-        
-        viewModel.requestPermission(rx.viewDidLoad)
-        viewModel.viewDidLoad(rx.viewDidLoad)
+        bind()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .background
+        
         addSubviews()
         setupLayoutConstraints()
+    }
+    
+    private func makeRecommendView(titles: [String]) {
+        let builder: HomeContentViewBuilder = DefaultHomeContentViewBuilder()
+        for (index, title) in titles.enumerated() {
+            builder.set(title: title)
+            builder.set(titleColor: .dynamicBlack)
+            builder.set(subTitle: Constants.HomeViewController.recommendSubitlte)
+            builder.set(subtitleColor: .dynamicBlack)
+            builder.set(backgroundColor: .background)
+            builder.set(height: 350)
+            
+            let seeMoreButton = makeRecommendButton(index: index)
+            builder.set(buttons: [seeMoreButton])
+            
+            let view = builder.make()
+            builder.reset()
+            
+            let recommendCollectionView = makeRecommendCollectionView()
+            recommendCollectionView.tag = index
+            
+            view.addSubview(recommendCollectionView)
+            recommendCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            recommendCollectionView.topAnchor.constraint(equalTo: view.centerYAnchor, constant: -10.0).isActive = true
+            recommendCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            recommendCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24.0).isActive = true
+            
+            self.adapter?.add(recommendCollectionView)
+            recommendCollectionViews.append(recommendCollectionView)
+            contentStackView.addArrangedSubview(view)
+        }
+    }
+    
+    private func makeRecommendButton(index: Int) -> UIButton {
+        let button = UIButton()
+        button.setTitle(Constants.HomeViewController.seeMore, for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleLabel?.font = Constants.Font.button2
+        button.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                self?.viewModel.didTapRecommendSeemoreButton(at: index)
+            })
+            .disposed(by: disposeBag)
+        return button
+    }
+    
+    private func makeRecommendCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.backgroundColor = .clear
+        collectionView.isSkeletonable = true
+        return collectionView
+    }
+}
+
+// MARK: - Bind
+extension HomeViewController {
+    private func bind() {
+        viewModel.requestPermission(rx.viewDidLoad)
+        viewModel.viewDidLoad(rx.viewDidLoad)
+        viewModel.viewWillAppear(rx.viewWillAppear)
         
-        alertBuilder.set(alertType: .singleButton)
-        alertBuilder.set(title: "Test")
-        alertBuilder.build(self)
+        viewModel.loadedPlayedMusicItemDriver
+            .drive(onNext: { [weak self] _ in
+                self?.recentlyPlayedCollectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.loadedRecommendMusicItemDriver
+            .drive(onNext: { [weak self] recommendTitles in
+                self?.makeRecommendView(titles: recommendTitles)
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - RecentlryCollectionView Delegate
+extension HomeViewController: HomeRecentlyCollectionViewDelegate {
+    func didSelectItem(at index: Int) {
+        viewModel.didSelectRecentlyItem(at: index)
+    }
+}
+
+// MARK: - RecommendCollectionView Delegate
+extension HomeViewController: HomeRecommendCollectionViewDelegate {
+    func didSelectItem(tag index: Int, at itemIndex: Int) {
+        viewModel.didSelectRecommendItem(tag: index, at: itemIndex)
     }
 }
 
@@ -131,18 +211,19 @@ extension HomeViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            contentView.heightAnchor.constraint(equalToConstant: 1000),
-            
             navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationView.topAnchor.constraint(equalTo: view.topAnchor),
             navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            recentlyPlayedView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            recentlyPlayedView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
-            recentlyPlayedView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            contentStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
+            contentStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            recentlyPlayedLabel.centerXAnchor.constraint(equalTo: recentlyPlayedView.centerXAnchor),
-            recentlyPlayedLabel.topAnchor.constraint(equalTo: recentlyPlayedView.topAnchor, constant: 8.0),
+            recentlyPlayedCollectionView.leadingAnchor.constraint(equalTo: recentlyPlayedView.leadingAnchor),
+            recentlyPlayedCollectionView.topAnchor.constraint(equalTo: recentlyPlayedView.centerYAnchor, constant: -10.0),
+            recentlyPlayedCollectionView.trailingAnchor.constraint(equalTo: recentlyPlayedView.trailingAnchor),
+            recentlyPlayedCollectionView.bottomAnchor.constraint(equalTo: recentlyPlayedView.bottomAnchor, constant: -24.0),
         ])
     }
 }
@@ -150,16 +231,14 @@ extension HomeViewController {
 // MARK: - Add subviews
 extension HomeViewController {
     private func addSubviews() {
-        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        contentView.addSubview(recentlyPlayedView)
-        recentlyPlayedView.addSubview(recentlyPlayedLabel)
-        
+        contentView.addSubview(contentStackView)
+        contentStackView.addArrangedSubview(recentlyPlayedView)
+        recentlyPlayedView.addSubview(recentlyPlayedCollectionView)
         
         view.addSubview(navigationView)
     }
-    
 }
 
 #if DEBUG

@@ -43,18 +43,18 @@ enum TabBarPage {
     func pageIconDataValue() -> UIImage {
         switch self {
         case .home:
-            return UIImage()
+            return UIImage(systemName: "house") ?? .init()
         case .setting:
-            return UIImage()
+            return UIImage(systemName: "gear") ?? .init()
         }
     }
     
     func pageSelectedIconDataValue() -> UIImage {
         switch self {
         case .home:
-            return UIImage()
+            return UIImage(systemName: "house.fill") ?? .init()
         case .setting:
-            return UIImage()
+            return UIImage(systemName: "gear.circle.fill") ?? .init()
         }
     }
 }

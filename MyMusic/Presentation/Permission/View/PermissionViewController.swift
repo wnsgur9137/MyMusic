@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 final class PermissionViewController: UIViewController {
     
@@ -47,15 +49,16 @@ final class PermissionViewController: UIViewController {
         return stackView
     }()
     
-    private let permissionButton: UIButton = {
-        let button = UIButton()
+    private let permissionButton: CustomButton = {
+        let button = CustomButton(style: .fill, size: .medium)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("teststestest", for: .normal)
+        button.setTitle("권한 요청하기", for: .normal)
         button.setTitleColor(.dynamicBlack, for: .normal)
         return button
     }()
     
     private let viewModel: PermissionViewModel
+    private let disposeBag = DisposeBag()
     
     // MARK: - Life cycle
     
@@ -73,6 +76,11 @@ final class PermissionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        super.loadView()
+        bind()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 //        setupGradientBackground() // 아무리 해봐도 안이뻐서 그냥 이미지로 대체...
@@ -84,12 +92,11 @@ final class PermissionViewController: UIViewController {
     }
     
     private func setupPermissionButtonAction() {
-        permissionButton.addAction(
-            UIAction { _ in
+        permissionButton.rx.tap
+            .subscribe(onNext: {
                 self.viewModel.requestMusicAuthorization()
-            },
-            for: .touchUpInside
-        )
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupGradientBackground() {
@@ -108,6 +115,33 @@ final class PermissionViewController: UIViewController {
     }
 }
 
+// MARK: - Bind
+extension PermissionViewController {
+    private func bind() {
+        viewModel.musicAuth
+            .drive(onNext: { [weak self] isAuth in
+                if isAuth {
+                    self?.dismiss(animated: true)
+                } else {
+                    guard let self = self else { return }
+                    let alertBuilder = DefaultAlertBuilder()
+                    alertBuilder.set(alertType: .horizontalButton)
+                    alertBuilder.set(title: Constants.PermissionViewController.authAlertTitle)
+                    alertBuilder.set(message: Constants.PermissionViewController.authAlertMessage)
+                    alertBuilder.set(messageAlignment: .center)
+                    alertBuilder.set(confirmTitle: Constants.PermissionViewController.authAlertConfirm)
+                    if let settingURL = URL(string: UIApplication.openSettingsURLString) {
+                        alertBuilder.add(confirmAction: {
+                            UIApplication.shared.open(settingURL)
+                        })
+                    }
+                    alertBuilder.build(self)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
 // MARK: - Layout
 extension PermissionViewController {
     private func setupLayoutConstraints() {
@@ -117,10 +151,10 @@ extension PermissionViewController {
             backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            titleView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor),
-            titleView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor),
-            titleView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor),
-            titleView.bottomAnchor.constraint(equalTo: backgroundImageView.centerYAnchor),
+            titleView.topAnchor.constraint(equalTo: view.topAnchor),
+            titleView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            titleView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleView.bottomAnchor.constraint(equalTo: view.centerYAnchor),
             
             titleLabel.bottomAnchor.constraint(equalTo: titleView.centerYAnchor, constant: -6.0),
             titleLabel.centerXAnchor.constraint(equalTo: titleView.centerXAnchor),
@@ -128,8 +162,8 @@ extension PermissionViewController {
             subtitleLabel.topAnchor.constraint(equalTo: titleView.centerYAnchor, constant: 6.0),
             subtitleLabel.centerXAnchor.constraint(equalTo: titleView.centerXAnchor),
             
-            permissionButton.centerXAnchor.constraint(equalTo: backgroundImageView.centerXAnchor),
-            permissionButton.centerYAnchor.constraint(equalTo: backgroundImageView.centerYAnchor),
+            permissionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            permissionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
     }
 }
@@ -138,9 +172,9 @@ extension PermissionViewController {
 extension PermissionViewController {
     private func addSubviews() {
         view.addSubview(backgroundImageView)
-        backgroundImageView.addSubview(titleView)
+        view.addSubview(titleView)
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
-        backgroundImageView.addSubview(permissionButton)
+        view.addSubview(permissionButton)
     }
 }
