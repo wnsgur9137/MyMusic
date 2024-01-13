@@ -99,8 +99,7 @@ final class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel.requestPermission(rx.viewDidLoad)
-        viewModel.viewDidLoad(rx.viewDidLoad)
+        bind()
     }
     
     override func viewDidLoad() {
@@ -112,6 +111,20 @@ final class HomeViewController: UIViewController {
         alertBuilder.set(alertType: .singleButton)
         alertBuilder.set(title: "Test")
         alertBuilder.build(self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+}
+
+// MARK: - Bind
+extension HomeViewController {
+    private func bind() {
+        viewModel.requestPermission(rx.viewDidLoad)
+        viewModel.viewDidLoad(rx.viewDidLoad)
+        viewModel.viewWillAppear(rx.viewWillAppear)
     }
 }
 

@@ -17,6 +17,7 @@ struct HomeViewModelActions {
 protocol HomeViewModelInput {
     func viewDidLoad(_ observable: Observable<Void>)
     func requestPermission(_ observable: Observable<Void>)
+    func viewWillAppear(_ observable: Observable<Void>)
 }
 
 protocol HomeViewModelOutput {
@@ -34,6 +35,7 @@ final class DefaultHomeViewModel: HomeViewModel {
     var recentlyPlayedRelay: PublishRelay<Void> = .init()
     var recentlyPlayed: Driver<Void> = .never()
     
+    private var isMusicAuth: Bool = false
     var musicAuthRelay: PublishRelay<Bool> = .init()
     var musicAuth: Driver<Bool> {
         return musicAuthRelay.asDriver(onErrorDriveWith: .never())
@@ -44,21 +46,19 @@ final class DefaultHomeViewModel: HomeViewModel {
         self.homeUseCase = homeUseCase
         self.actions = actions
     }
+    
+    private func load(isMusicAuth: Bool) {
+        self.isMusicAuth = isMusicAuth
+        self.musicAuthRelay.accept(self.isMusicAuth)
+    }
 }
 
 extension DefaultHomeViewModel {
     func requestPermission(_ observable: Observable<Void>) {
         observable
             .subscribe(onNext: { _ in
-                
                 let auth = UserDefaults.standard.bool(forKey: "musicAuth")
-                print("userDefaults Auth: \(auth)")
-                self.musicAuthRelay.accept(auth)
-                
-//                Task {
-//                    let auth = await self.homeUseCase.requestMusicAuthorization()
-//                    self.musicAuthRelay.accept(auth == .authorized)
-//                }
+                self.load(isMusicAuth: auth)
             })
             .disposed(by: disposeBag)
     }
@@ -66,6 +66,15 @@ extension DefaultHomeViewModel {
     func viewDidLoad(_ viewDidLoad: Observable<Void>) {
         viewDidLoad
             .subscribe(onNext: {_ in
+                self.homeUseCase.loadRecentlyPlayed()
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func viewWillAppear(_ viewWillAppear: Observable<Void>) {
+        viewWillAppear
+            .subscribe(onNext: { _ in
+                guard self.isMusicAuth else { return }
                 self.homeUseCase.loadRecentlyPlayed()
             })
             .disposed(by: disposeBag)
