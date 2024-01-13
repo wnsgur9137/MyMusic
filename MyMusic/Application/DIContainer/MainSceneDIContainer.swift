@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MusicKit
 
 final class MainSceneDIContainer {
     struct Dependencies {
@@ -43,6 +44,22 @@ extension MainSceneDIContainer {
 
 // MARK: - HomeTab Coordiantor Dependencies
 extension MainSceneDIContainer: HomeTabCoordinatorDependencies {
+    func makeRecentlyDetailViewModel(item: RecentlyPlayedMusicItem) -> HomeRecentlyDetailViewModel {
+        return DefaultHomeRecentlyDetailViewModel(item: item)
+    }
+    
+    func makeRecentlyDetailViewController(item: RecentlyPlayedMusicItem) -> HomeRecentlyDetailViewController {
+        return HomeRecentlyDetailViewController(with: makeRecentlyDetailViewModel(item: item))
+    }
+    
+    func makeRecommendDetailViewModel(item: MusicPersonalRecommendation.Item) -> HomeRecommendDetailViewModel {
+        return DefaultHomeRecommendDetailViewModel(item: item)
+    }
+    
+    func makeRecommendDetailViewController(item: MusicPersonalRecommendation.Item) -> HomeRecommendDetailViewController {
+        return HomeRecommendDetailViewController(with: makeRecommendDetailViewModel(item: item))
+    }
+    
     func makePermissionViewModel() -> PermissionViewModel {
         return DefaultPermissionViewModel(musicUseCase: makeMusicUseCase())
     }

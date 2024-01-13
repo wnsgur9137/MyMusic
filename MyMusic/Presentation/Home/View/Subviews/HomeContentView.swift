@@ -73,7 +73,7 @@ extension HomeContentView {
             subTitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12.0),
             
             buttonStackView.centerXAnchor.constraint(equalTo: subTitleLabel.centerXAnchor),
-            buttonStackView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor, constant: 12.0),
+            buttonStackView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor, constant: 8.0),
             
             heightConstarint
         ])

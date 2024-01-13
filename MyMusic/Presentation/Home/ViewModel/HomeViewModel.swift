@@ -12,12 +12,18 @@ import MusicKit
 
 struct HomeViewModelActions {
     let presentPermissionViewController: () -> Void
+    let pushRecentlyDetailViewController: (RecentlyPlayedMusicItem) -> Void
+    let pushRecommendDetailViewcontroller: (MusicPersonalRecommendation.Item) -> Void
 }
 
 protocol HomeViewModelInput {
     func viewDidLoad(_ observable: Observable<Void>)
     func requestPermission(_ observable: Observable<Void>)
     func viewWillAppear(_ observable: Observable<Void>)
+    
+    func didTapRecommendSeemoreButton(at index: Int)
+    func didSelectRecentlyItem(at index: Int)
+    func didSelectRecommendItem(tag index: Int, at itemIndex: Int)
 }
 
 protocol HomeViewModelOutput {
@@ -153,6 +159,20 @@ extension DefaultHomeViewModel {
                 self.loadRecommend()
             })
             .disposed(by: disposeBag)
+    }
+    
+    func didTapRecommendSeemoreButton(at index: Int) {
+        print("taptap index: \(index)")
+    }
+    
+    func didSelectRecentlyItem(at index: Int) {
+        let item = recentlyPlayedMusicItems[index]
+        self.actions?.pushRecentlyDetailViewController(item)
+    }
+    
+    func didSelectRecommendItem(tag index: Int, at itemIndex: Int) {
+        let item = recommendMusicItems[index].items[itemIndex]
+        self.actions?.pushRecommendDetailViewcontroller(item)
     }
 }
 

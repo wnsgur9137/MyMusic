@@ -17,6 +17,7 @@ final class RecentlyPlayedCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 24.0
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.backgroundColor = .lightGray
         imageView.isSkeletonable = true
         return imageView
     }()

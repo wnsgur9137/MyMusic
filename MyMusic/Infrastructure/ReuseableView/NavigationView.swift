@@ -23,25 +23,27 @@ final class NavigationView: UIView {
         return view
     }()
     
-    private lazy var backwardButton: UIButton = {
+    lazy var backwardButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
         button.tintColor = .dynamicBlack
+        button.isHidden = true
         return button
     }()
     
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 24.0, height: 24.0))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+//    private lazy var imageView: UIImageView = {
+//        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 24.0, height: 24.0))
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        return imageView
+//    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = Constants.Font.subtitleSemiBold1
         label.textColor = .dynamicBlack
+        label.textAlignment = .left
         return label
     }()
     
@@ -62,7 +64,7 @@ final class NavigationView: UIView {
         super.init(frame: .zero)
         
         titleLabel.text = title
-        imageView.image = image
+//        imageView.image = image
         
         addSubviews()
         setupLayoutConstraints()
@@ -70,6 +72,12 @@ final class NavigationView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension NavigationView {
+    func configure(title: String) {
+        titleLabel.text = title
     }
 }
 
@@ -81,6 +89,8 @@ extension NavigationView {
             blurView.topAnchor.constraint(equalTo: topAnchor),
             blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
             blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backwardButton.widthAnchor.constraint(equalToConstant: 24.0),
+            backwardButton.heightAnchor.constraint(equalToConstant: 24.0),
             
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
@@ -88,10 +98,16 @@ extension NavigationView {
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
             contentView.heightAnchor.constraint(equalToConstant: contentViewHeight),
             
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24.0),
-            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            backwardButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24.0),
+            backwardButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16.0),
+//            imageView.leadingAnchor.constraint(equalTo: backwardButton.trailingAnchor, constant: 12.0),
+//            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+//            imageView.widthAnchor.constraint(equalToConstant: 24.0),
+//            imageView.heightAnchor.constraint(equalToConstant: 24.0),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: backwardButton.trailingAnchor, constant: 16.0),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24.0),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             bottomBorderView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -106,7 +122,8 @@ extension NavigationView {
     private func addSubviews() {
         addSubview(blurView)
         addSubview(contentView)
-        contentView.addSubview(imageView)
+        contentView.addSubview(backwardButton)
+//        contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
         addSubview(bottomBorderView)
     }

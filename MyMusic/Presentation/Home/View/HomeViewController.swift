@@ -112,7 +112,11 @@ final class HomeViewController: UIViewController {
             builder.set(subTitle: Constants.HomeViewController.recommendSubitlte)
             builder.set(subtitleColor: .dynamicBlack)
             builder.set(backgroundColor: .background)
-            builder.set(height: 300)
+            builder.set(height: 350)
+            
+            let seeMoreButton = makeRecommendButton(index: index)
+            builder.set(buttons: [seeMoreButton])
+            
             let view = builder.make()
             builder.reset()
             
@@ -121,7 +125,7 @@ final class HomeViewController: UIViewController {
             
             view.addSubview(recommendCollectionView)
             recommendCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-            recommendCollectionView.topAnchor.constraint(equalTo: view.centerYAnchor, constant: -30.0).isActive = true
+            recommendCollectionView.topAnchor.constraint(equalTo: view.centerYAnchor, constant: -10.0).isActive = true
             recommendCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
             recommendCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24.0).isActive = true
             
@@ -129,6 +133,19 @@ final class HomeViewController: UIViewController {
             recommendCollectionViews.append(recommendCollectionView)
             contentStackView.addArrangedSubview(view)
         }
+    }
+    
+    private func makeRecommendButton(index: Int) -> UIButton {
+        let button = UIButton()
+        button.setTitle(Constants.HomeViewController.seeMore, for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleLabel?.font = Constants.Font.button2
+        button.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                self?.viewModel.didTapRecommendSeemoreButton(at: index)
+            })
+            .disposed(by: disposeBag)
+        return button
     }
     
     private func makeRecommendCollectionView() -> UICollectionView {
@@ -167,14 +184,14 @@ extension HomeViewController {
 // MARK: - RecentlryCollectionView Delegate
 extension HomeViewController: HomeRecentlyCollectionViewDelegate {
     func didSelectItem(at index: Int) {
-        print("index: \(index)")
+        viewModel.didSelectRecentlyItem(at: index)
     }
 }
 
 // MARK: - RecommendCollectionView Delegate
 extension HomeViewController: HomeRecommendCollectionViewDelegate {
     func didSelectItem(tag index: Int, at itemIndex: Int) {
-        print("tag: \(index), item: \(itemIndex)")
+        viewModel.didSelectRecommendItem(tag: index, at: itemIndex)
     }
 }
 
@@ -204,7 +221,7 @@ extension HomeViewController {
             contentStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             recentlyPlayedCollectionView.leadingAnchor.constraint(equalTo: recentlyPlayedView.leadingAnchor),
-            recentlyPlayedCollectionView.topAnchor.constraint(equalTo: recentlyPlayedView.centerYAnchor, constant: -30.0),
+            recentlyPlayedCollectionView.topAnchor.constraint(equalTo: recentlyPlayedView.centerYAnchor, constant: -10.0),
             recentlyPlayedCollectionView.trailingAnchor.constraint(equalTo: recentlyPlayedView.trailingAnchor),
             recentlyPlayedCollectionView.bottomAnchor.constraint(equalTo: recentlyPlayedView.bottomAnchor, constant: -24.0),
         ])

@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import MusicKit
 
 protocol HomeTabCoordinatorDependencies {
     func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
     func makePermissionViewController() -> PermissionViewController
+    func makeRecentlyDetailViewController(item: RecentlyPlayedMusicItem) -> HomeRecentlyDetailViewController
+    func makeRecommendDetailViewController(item: MusicPersonalRecommendation.Item) -> HomeRecommendDetailViewController
 }
 
 protocol SettingTabCoordinatorDependencies {
@@ -42,7 +45,7 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
     }
     
     func start() {
-        let pages: [TabBarPage] = [.home, .setting]
+        let pages: [TabBarPage] = [.home] // .setting
             .sorted(by: { $0.pageOrderNumber() < $1.pageOrderNumber() })
         let controllers: [UINavigationController] = pages.map({ getTabController($0) })
         
@@ -80,6 +83,14 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
 }
 
 extension TabBarFlowCoordinator: HomeCoordinatorDependencies {
+    func makeRecentlyDetailViewController(item: RecentlyPlayedMusicItem) -> UIViewController {
+        self.homeTabDependencies.makeRecentlyDetailViewController(item: item)
+    }
+    
+    func makeRecommendDetailViewController(item: MusicPersonalRecommendation.Item) -> UIViewController {
+        self.homeTabDependencies.makeRecommendDetailViewController(item: item)
+    }
+    
     func makePermissionViewController() -> PermissionViewController {
         self.homeTabDependencies.makePermissionViewController()
     }

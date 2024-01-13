@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import MusicKit
 
 protocol HomeCoordinatorDependencies {
     func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
     func makePermissionViewController() -> PermissionViewController
+    func makeRecentlyDetailViewController(item: RecentlyPlayedMusicItem) -> UIViewController
+    func makeRecommendDetailViewController(item: MusicPersonalRecommendation.Item) -> UIViewController
 }
 
 protocol HomeCoordinatorProtocol: Coordinator {
@@ -36,7 +39,10 @@ final class HomeCoordinator: HomeCoordinatorProtocol {
     }
     
     func showHomeViewController() {
-        let actions = HomeViewModelActions(presentPermissionViewController: presentPermissionViewController)
+        let actions = HomeViewModelActions(
+            presentPermissionViewController: presentPermissionViewController,
+        pushRecentlyDetailViewController: pushDetailViewController,
+        pushRecommendDetailViewcontroller: pushDetailViewController)
         let viewController = dependencies.makeHomeViewController(actions: actions)
         navigationController?.pushViewController(viewController, animated: false)
         homeViewController = viewController
@@ -45,5 +51,15 @@ final class HomeCoordinator: HomeCoordinatorProtocol {
     func presentPermissionViewController() {
         let viewController = dependencies.makePermissionViewController()
         navigationController?.present(viewController, animated: true)
+    }
+    
+    func pushDetailViewController(_ item: RecentlyPlayedMusicItem) {
+        let viewController = dependencies.makeRecentlyDetailViewController(item: item)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func pushDetailViewController(_ item: MusicPersonalRecommendation.Item) {
+        let viewController = dependencies.makeRecommendDetailViewController(item: item)
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
