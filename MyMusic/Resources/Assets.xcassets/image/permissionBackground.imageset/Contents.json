@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "v904-nunny-010-f.jpg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "codioful-formerly-gradienta-7E5kq_sW0Ew-unsplash.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

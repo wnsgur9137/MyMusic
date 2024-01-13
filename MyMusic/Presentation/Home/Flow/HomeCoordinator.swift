@@ -37,7 +37,6 @@ final class HomeCoordinator: HomeCoordinatorProtocol {
     func showHomeViewController() {
         let actions = HomeViewModelActions()
         let viewController = dependencies.makeHomeViewController(actions: actions)
-        
         navigationController?.pushViewController(viewController, animated: false)
         homeViewController = viewController
     }

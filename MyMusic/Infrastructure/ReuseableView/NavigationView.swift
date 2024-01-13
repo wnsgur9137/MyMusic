@@ -8,11 +8,27 @@
 import UIKit
 
 final class NavigationView: UIView {
+    private let blurView: UIVisualEffectView = {
+        let view = UIVisualEffectView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let blurEffect = UIBlurEffect(style: .light)
+        view.effect = blurEffect
+        view.alpha = 0.98
+        return view
+    }()
+    
     private let contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .dynamicWhite
         return view
+    }()
+    
+    private lazy var backwardButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "arrow.backward"), for: .normal)
+        button.tintColor = .dynamicBlack
+        return button
     }()
     
     private lazy var imageView: UIImageView = {
@@ -29,12 +45,21 @@ final class NavigationView: UIView {
         return label
     }()
     
+    private let bottomBorderView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .darkGray
+        view.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
+        return view
+    }()
+    
+    private let contentViewHeight: CGFloat
+    
     init(title: String? = nil,
          image: UIImage? = nil,
-         height: CGFloat = 54.0) {
+         height: CGFloat = 56.0) {
+        self.contentViewHeight = height
         super.init(frame: .zero)
-        backgroundColor = .dynamicWhite
-        heightAnchor.constraint(equalToConstant: height).isActive = true
         
         titleLabel.text = title
         imageView.image = image
@@ -52,16 +77,26 @@ final class NavigationView: UIView {
 extension NavigationView {
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentView.heightAnchor.constraint(equalToConstant: contentViewHeight),
             
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24.0),
             imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             titleLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: 16.0),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            bottomBorderView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bottomBorderView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bottomBorderView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }
@@ -69,9 +104,10 @@ extension NavigationView {
 // MARK: - Add subviews
 extension NavigationView {
     private func addSubviews() {
+        addSubview(blurView)
         addSubview(contentView)
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)
-//        contentView.addSubview
+        addSubview(bottomBorderView)
     }
 }

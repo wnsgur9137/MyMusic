@@ -52,7 +52,7 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
         tabBarController?.setViewControllers(controllers, animated: true)
         tabBarController?.selectedIndex = TabBarPage.home.pageOrderNumber()
         tabBarController?.tabBar.isTranslucent = false
-//        tabBarController?.tabBar.backgroundColor = .dynamicBlack
+        tabBarController?.tabBar.backgroundColor = .dynamicWhite
     }
     
     private func getTabController(_ page: TabBarPage) -> UINavigationController {
