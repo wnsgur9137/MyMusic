@@ -8,6 +8,15 @@
 import UIKit
 
 final class NavigationView: UIView {
+    private let blurView: UIVisualEffectView = {
+        let view = UIVisualEffectView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let blurEffect = UIBlurEffect(style: .light)
+        view.effect = blurEffect
+        view.alpha = 0.98
+        return view
+    }()
+    
     private let contentView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +60,6 @@ final class NavigationView: UIView {
          height: CGFloat = 56.0) {
         self.contentViewHeight = height
         super.init(frame: .zero)
-        backgroundColor = .blue
         
         titleLabel.text = title
         imageView.image = image
@@ -69,6 +77,11 @@ final class NavigationView: UIView {
 extension NavigationView {
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
+            blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurView.topAnchor.constraint(equalTo: topAnchor),
+            blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -91,6 +104,7 @@ extension NavigationView {
 // MARK: - Add subviews
 extension NavigationView {
     private func addSubviews() {
+        addSubview(blurView)
         addSubview(contentView)
         contentView.addSubview(imageView)
         contentView.addSubview(titleLabel)

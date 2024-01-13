@@ -118,9 +118,10 @@ final class HomeViewController: UIViewController {
 // MARK: - Layout
 extension HomeViewController {
     private func setupLayoutConstraints() {
+        scrollView.addPaddingTop(height: 56.0)
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.topAnchor.constraint(equalTo: navigationView.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
@@ -149,11 +150,14 @@ extension HomeViewController {
 // MARK: - Add subviews
 extension HomeViewController {
     private func addSubviews() {
-        view.addSubview(navigationView)
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(recentlyPlayedView)
         recentlyPlayedView.addSubview(recentlyPlayedLabel)
+        
+        
+        view.addSubview(navigationView)
     }
     
 }
