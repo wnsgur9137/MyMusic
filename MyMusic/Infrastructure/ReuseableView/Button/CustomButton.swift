@@ -123,6 +123,8 @@ final class CustomButton: UIButton {
         backgroundColor = buttonBackgroundColor
         adjustsImageWhenHighlighted = false
         layer.cornerRadius = buttonCornerRadius
+        layer.borderWidth = 0.2
+        layer.borderColor = buttonBorderColor
         containedButtonShadow = isEnabled
     }
     

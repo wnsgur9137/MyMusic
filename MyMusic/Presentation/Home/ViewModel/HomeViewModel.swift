@@ -11,7 +11,7 @@ import RxCocoa
 import MusicKit
 
 struct HomeViewModelActions {
-    
+    let presentPermissionViewController: () -> Void
 }
 
 protocol HomeViewModelInput {
@@ -29,22 +29,34 @@ protocol HomeViewModel: HomeViewModelInput, HomeViewModelOutput { }
 
 final class DefaultHomeViewModel: HomeViewModel {
     private let homeUseCase: HomeUseCase
+    private let musicUseCase: MusicUseCase
     private let actions: HomeViewModelActions?
     private let disposeBag = DisposeBag()
+    private let notificationCenter = NotificationCenter.default
     
     var recentlyPlayedRelay: PublishRelay<Void> = .init()
     var recentlyPlayed: Driver<Void> = .never()
     
     private var isMusicAuth: Bool = false
-    var musicAuthRelay: PublishRelay<Bool> = .init()
+    private var musicAuthRelay: PublishRelay<Bool> = .init()
     var musicAuth: Driver<Bool> {
         return musicAuthRelay.asDriver(onErrorDriveWith: .never())
     }
     
     init(homeUseCase: HomeUseCase,
+         musicUseCase: MusicUseCase,
          actions: HomeViewModelActions? = nil) {
         self.homeUseCase = homeUseCase
+        self.musicUseCase = musicUseCase
         self.actions = actions
+        
+        notificationCenter.addObserver(self, selector: #selector(loadRecentPlayed), name: .musicAuth, object: nil)
+    }
+    
+    @objc private func loadRecentPlayed() {
+        let auth = UserDefaults.standard.bool(forKey: "musicAuth")
+        guard auth else { return }
+        musicUseCase.loadRecentlyPlayed()
     }
     
     private func load(isMusicAuth: Bool) {
@@ -58,7 +70,10 @@ extension DefaultHomeViewModel {
         observable
             .subscribe(onNext: { _ in
                 let auth = UserDefaults.standard.bool(forKey: "musicAuth")
-                self.load(isMusicAuth: auth)
+                if auth == false {
+                    self.actions?.presentPermissionViewController()
+                }
+//                self.load(isMusicAuth: auth)
             })
             .disposed(by: disposeBag)
     }
@@ -66,7 +81,7 @@ extension DefaultHomeViewModel {
     func viewDidLoad(_ viewDidLoad: Observable<Void>) {
         viewDidLoad
             .subscribe(onNext: {_ in
-                self.homeUseCase.loadRecentlyPlayed()
+                self.musicUseCase.loadRecentlyPlayed()
             })
             .disposed(by: disposeBag)
     }
@@ -75,7 +90,7 @@ extension DefaultHomeViewModel {
         viewWillAppear
             .subscribe(onNext: { _ in
                 guard self.isMusicAuth else { return }
-                self.homeUseCase.loadRecentlyPlayed()
+                self.musicUseCase.loadRecentlyPlayed()
             })
             .disposed(by: disposeBag)
     }

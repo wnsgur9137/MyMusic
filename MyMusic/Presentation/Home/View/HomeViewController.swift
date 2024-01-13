@@ -9,13 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-protocol HomeViewControllerDependencies {
-    func makePermissionViewController()
-}
-
 final class HomeViewController: UIViewController {
-    
-    private let alertBuilder: AlertBuilder
     
     private let navigationView: NavigationView = {
         let navigationView = NavigationView(title: "Home")
@@ -64,16 +58,13 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Life cycle
     
-    static func create(with viewModel: HomeViewModel,
-                       alertBuilder: AlertBuilder = DefaultAlertBuilder()) -> HomeViewController {
-        let viewController = HomeViewController(with: viewModel, alertBuilder: alertBuilder)
+    static func create(with viewModel: HomeViewModel) -> HomeViewController {
+        let viewController = HomeViewController(with: viewModel)
         return viewController
     }
     
-    init(with viewModel: HomeViewModel,
-         alertBuilder: AlertBuilder) {
+    init(with viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        self.alertBuilder = alertBuilder
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -89,16 +80,6 @@ final class HomeViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel.musicAuth
-            .drive { isAuthorized in
-                guard !isAuthorized else { return }
-                let useCase = DefaultMusicUseCase()
-                let viewModel = DefaultPermissionViewModel(musicUseCase: useCase)
-                let viewController = PermissionViewController(with: viewModel)
-                self.present(viewController, animated: true, completion: nil)
-            }
-            .disposed(by: disposeBag)
-        
         bind()
     }
     
@@ -107,15 +88,11 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = .background
         addSubviews()
         setupLayoutConstraints()
-        
-        alertBuilder.set(alertType: .singleButton)
-        alertBuilder.set(title: "Test")
-        alertBuilder.build(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        print("viewWillAppear")
     }
 }
 

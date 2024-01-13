@@ -9,6 +9,7 @@ import UIKit
 
 protocol HomeTabCoordinatorDependencies {
     func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
+    func makePermissionViewController() -> PermissionViewController
 }
 
 protocol SettingTabCoordinatorDependencies {
@@ -79,6 +80,10 @@ final class TabBarFlowCoordinator: TabBarFlowCoordinatorProtocol {
 }
 
 extension TabBarFlowCoordinator: HomeCoordinatorDependencies {
+    func makePermissionViewController() -> PermissionViewController {
+        self.homeTabDependencies.makePermissionViewController()
+    }
+    
     func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController {
         self.homeTabDependencies.makeHomeViewController(actions: actions)
     }

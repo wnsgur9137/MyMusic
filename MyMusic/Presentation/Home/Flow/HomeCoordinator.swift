@@ -9,6 +9,7 @@ import UIKit
 
 protocol HomeCoordinatorDependencies {
     func makeHomeViewController(actions: HomeViewModelActions) -> HomeViewController
+    func makePermissionViewController() -> PermissionViewController
 }
 
 protocol HomeCoordinatorProtocol: Coordinator {
@@ -35,9 +36,14 @@ final class HomeCoordinator: HomeCoordinatorProtocol {
     }
     
     func showHomeViewController() {
-        let actions = HomeViewModelActions()
+        let actions = HomeViewModelActions(presentPermissionViewController: presentPermissionViewController)
         let viewController = dependencies.makeHomeViewController(actions: actions)
         navigationController?.pushViewController(viewController, animated: false)
         homeViewController = viewController
+    }
+    
+    func presentPermissionViewController() {
+        let viewController = dependencies.makePermissionViewController()
+        navigationController?.present(viewController, animated: true)
     }
 }
