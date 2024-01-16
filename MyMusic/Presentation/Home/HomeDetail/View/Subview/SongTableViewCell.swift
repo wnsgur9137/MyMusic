@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import FlexLayout
+import PinLayout
 
 final class SongTableViewCell: UITableViewCell {
+    private let rootFlexContainerView = UIView()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -20,13 +24,7 @@ final class SongTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        addSubview(titleLabel)
-        
-        NSLayoutConstraint.activate([
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12.0),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 12.0)
-        ])
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -35,5 +33,21 @@ final class SongTableViewCell: UITableViewCell {
     
     func set(title: String) {
         titleLabel.text = title
+    }
+}
+
+// MARK: - Layout
+extension SongTableViewCell {
+    private func setupLayout() {
+        addSubview(rootFlexContainerView)
+        
+        rootFlexContainerView.flex.define { flex in
+            flex.addItem(titleLabel)
+                .marginLeft(12.0)
+                .marginRight(12.0)
+        }
+        
+        rootFlexContainerView.pin.all()
+        rootFlexContainerView.flex.layout()
     }
 }

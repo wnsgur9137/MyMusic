@@ -24,17 +24,23 @@ protocol HomeContentViewBuilder {
 }
 
 final class DefaultHomeContentViewBuilder: HomeContentViewBuilder {
-    private var homeContentView: HomeContentView = {
-        let view = HomeContentView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+//    private var homeContentView: HomeContentView = {
+//        let view = HomeContentView()
+//        return view
+//    }()
+    private var homeContentView: HomeContentView
+    private let isUsedCollectionView: Bool
+    
+    init(isUsedCollectionView: Bool = false) {
+        self.isUsedCollectionView = isUsedCollectionView
+        homeContentView = HomeContentView(isUsedCollectionView: isUsedCollectionView)
+    }
 }
 
 extension DefaultHomeContentViewBuilder {
     func reset() {
         self.homeContentView = {
-            let view = HomeContentView()
+            let view = HomeContentView(isUsedCollectionView: self.isUsedCollectionView)
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }()
@@ -76,6 +82,14 @@ extension DefaultHomeContentViewBuilder {
     
     func set(height: CGFloat) {
         homeContentView.height = height
+    }
+    
+    func set(collectionViewDataSource dataSource: UICollectionViewDataSource) {
+        homeContentView.collectionView.dataSource = dataSource
+    }
+    
+    func set(collectionViewDelegate delegate: UICollectionViewDelegate) {
+        homeContentView.collectionView.delegate = delegate
     }
     
     func make() -> HomeContentView {

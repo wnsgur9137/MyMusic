@@ -11,28 +11,17 @@ import RxCocoa
 import SkeletonView
 import MusicKit
 import Kingfisher
+import FlexLayout
 
 final class HomeRecommendDetailViewController: UIViewController {
     
     private let navigationView: NavigationView = {
         let view = NavigationView(title: "")
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         view.backwardButton.isHidden = false
         return view
     }()
-    
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        return scrollView
-    }()
-    
-    private let mainView: HomeDetailView = {
-        let view = HomeDetailView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    private let mainView = HomeDetailView()
     
     private let viewModel: HomeRecommendDetailViewModel
     private let disposeBag = DisposeBag()
@@ -69,7 +58,11 @@ final class HomeRecommendDetailViewController: UIViewController {
         setupBackwardButton()
         
         addSubviews()
-        setupLayoutConstraints()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupSubviewLayout()
     }
     
     private func setupBackwardButton() {
@@ -123,33 +116,22 @@ extension HomeRecommendDetailViewController: HomeDetailTableViewDelegate {
 
 // MARK: - Layout
 extension HomeRecommendDetailViewController {
-    func setupLayoutConstraints() {
-        scrollView.addPaddingTop(height: 56.0)
-        NSLayoutConstraint.activate([
-            scrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            mainView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            mainView.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
-            mainView.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
-            mainView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            mainView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
-            navigationView.topAnchor.constraint(equalTo: view.topAnchor),
-            navigationView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            navigationView.rightAnchor.constraint(equalTo: view.rightAnchor),
-        ])
+    private func setupSubviewLayout() {
+        navigationView.pin
+            .left()
+            .top()
+            .right()
+        navigationView.flex.layout()
+        
+        mainView.pin.all()
+        mainView.flex.layout()
     }
 }
 
 // MARK: - Add subviews
 extension HomeRecommendDetailViewController {
     func addSubviews() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(mainView)
-        
+        view.addSubview(mainView)
         view.addSubview(navigationView)
     }
 }
