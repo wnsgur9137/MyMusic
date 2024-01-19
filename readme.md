@@ -16,7 +16,7 @@
 
 <h2>CLI 도구</h2>
 
-* Tuist(구현중)
+* Tuist(구현 예정)
 
 <br>
 
@@ -34,8 +34,8 @@
 * Moya
 * Kingfisher
 * SkeletonView
-* FlexLayout (구현중)
-* PinLayout (구현중)
+* FlexLayout
+* PinLayout
 
 <br>
 
