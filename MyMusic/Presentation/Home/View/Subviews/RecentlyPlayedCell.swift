@@ -9,8 +9,12 @@ import UIKit
 import MusicKit
 import Kingfisher
 import SkeletonView
+import FlexLayout
 
 final class RecentlyPlayedCell: UICollectionViewCell {
+    
+    private let rootFlexContainer = UIView()
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +34,8 @@ final class RecentlyPlayedCell: UICollectionViewCell {
         imageView.showAnimatedGradientSkeleton(usingGradient: .init(colors: [.lightGray, .gray]), animation: skeletonAnimation)
         addSubviews()
         setupLayoutConstraints()
+        
+//        setupLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -49,7 +55,22 @@ extension RecentlyPlayedCell {
 
 // MARK: - Layout
 extension RecentlyPlayedCell {
+    private func setupLayout() {
+        addSubview(rootFlexContainer)
+        rootFlexContainer.flex.define { flex in
+            flex.addItem(imageView)
+        }
+    }
+}
+
+// MARK: - Layout
+extension RecentlyPlayedCell {
     private func setupLayoutConstraints() {
+        addSubview(rootFlexContainer)
+        rootFlexContainer.flex.define { flex in
+            flex.addItem(imageView)
+        }
+        
         NSLayoutConstraint.activate([
             imageView.leftAnchor.constraint(equalTo: leftAnchor),
             imageView.topAnchor.constraint(equalTo: topAnchor),

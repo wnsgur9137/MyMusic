@@ -1,10 +1,17 @@
 PODS:
   - Alamofire (5.8.1)
+  - FlexLayout (2.0.05)
   - Kingfisher (7.10.2)
-  - Moya (15.0.0):
-    - Moya/Core (= 15.0.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
+  - Moya/RxSwift (15.0.0):
+    - Moya/Core
+    - RxSwift (~> 6.0)
+  - "NSObject+Rx (5.2.2)":
+    - RxSwift (~> 6.2)
+  - PinLayout (1.10.5)
+  - RxBlocking (6.6.0):
+    - RxSwift (= 6.6.0)
   - RxCocoa (6.6.0):
     - RxRelay (= 6.6.0)
     - RxSwift (= 6.6.0)
@@ -14,37 +21,54 @@ PODS:
   - RxRelay (6.6.0):
     - RxSwift (= 6.6.0)
   - RxSwift (6.6.0)
+  - RxTest (6.6.0):
+    - RxSwift (= 6.6.0)
   - SkeletonView (1.30.4)
 
 DEPENDENCIES:
+  - FlexLayout
   - Kingfisher
-  - Moya
+  - Moya/RxSwift
+  - "NSObject+Rx"
+  - PinLayout
+  - RxBlocking
   - RxCocoa
   - RxGesture
   - RxSwift
+  - RxTest
   - SkeletonView
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - FlexLayout
     - Kingfisher
     - Moya
+    - "NSObject+Rx"
+    - PinLayout
+    - RxBlocking
     - RxCocoa
     - RxGesture
     - RxRelay
     - RxSwift
+    - RxTest
     - SkeletonView
 
 SPEC CHECKSUMS:
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
+  FlexLayout: 1cdf0b71a0d06669a497c5a80a355e76129a1025
   Kingfisher: 99edc495d3b7607e6425f0d6f6847b2abd6d716d
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  "NSObject+Rx": 61cf1f7306a73dcef8b36649198af0813ec18dfd
+  PinLayout: f6c2b63a5a5b24864064e1d15c67de41b4e74748
+  RxBlocking: fbd1f8501443024f686e556f36dac79b0d5f4d7c
   RxCocoa: 44a80de90e25b739b5aeaae3c8c371a32e3343cc
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
   RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
+  RxTest: a23f26bb53a5e146a0a69db4f0fa0b69001ce7f4
   SkeletonView: 5a050f6411e697abd4cda0a8d767013399dccd69
 
-PODFILE CHECKSUM: 03e017535e7040dca224f502a4da4ca620b12260
+PODFILE CHECKSUM: 821a0ae1816c5ce9eab98689c09b271fed788a77
 
 COCOAPODS: 1.14.3

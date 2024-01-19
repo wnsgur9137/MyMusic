@@ -6,24 +6,23 @@
 //
 
 import UIKit
+import FlexLayout
+import PinLayout
 
 final class HomeDetailView: UIView {
+    
+    private let rootFlexContainerView = UIView()
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 12.0
         imageView.containedShadow = true
         imageView.clipsToBounds = true
-        
-        let imageViewWidth = (UIScreen.main.bounds.width / 5) * 4
-        imageView.widthAnchor.constraint(equalToConstant: imageViewWidth).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: imageViewWidth).isActive = true
         return imageView
     }()
     
     private let albumLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = Constants.HomeDetailView.album
         label.numberOfLines = 0
         label.textColor = .dynamicBlack
@@ -34,7 +33,6 @@ final class HomeDetailView: UIView {
     
     private let artistLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = Constants.HomeDetailView.artist
         label.textColor = .dynamicBlack
         label.font = Constants.Font.subtitleSemiBold3
@@ -49,7 +47,6 @@ final class HomeDetailView: UIView {
     
     private let trackLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.text = Constants.SongTableViewCell.track
         label.textColor = .dynamicBlack
         label.font = Constants.Font.subtitleSemiBold2
@@ -58,7 +55,6 @@ final class HomeDetailView: UIView {
     
     let trackTableView: UITableView = {
         let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
@@ -66,12 +62,17 @@ final class HomeDetailView: UIView {
         super.init(frame: frame)
         backgroundColor = .background
         
-        addSubviews()
-        setupLayoutConstraints()
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        rootFlexContainerView.pin.all(self.pin.safeArea)
+        rootFlexContainerView.flex.layout()
     }
 }
 
@@ -88,6 +89,33 @@ extension HomeDetailView {
 
 // MARK: - Layout
 extension HomeDetailView {
+    func setupLayout() {
+        addSubview(rootFlexContainerView)
+        rootFlexContainerView.flex
+            .alignItems(.center)
+            .define { flex in
+                let imageWidth = (UIScreen.main.bounds.width / 5) * 4
+                flex.addItem(imageView)
+                    .marginTop(56)
+                    .width(imageWidth)
+                    .height(imageWidth)
+                
+                flex.addItem(albumLabel)
+                    .marginTop(12.0)
+                
+                flex.addItem(artistLabel)
+                    .marginTop(8.0)
+                
+                flex.addItem(trackLabel)
+                    .alignSelf(.start)
+                    .margin(24.0, 24.0, 0, 24.0)
+                
+                flex.addItem(trackTableView)
+                    .marginTop(8.0)
+                    .width(100%)
+        }
+    }
+    
     func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor, constant: 24.0),
