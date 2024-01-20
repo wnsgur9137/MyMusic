@@ -166,6 +166,11 @@ extension HomeViewController: HomeRecommendCollectionViewDelegate {
 
 // MARK: - Layout
 extension HomeViewController {
+    private func addSubviews() {
+        view.addSubview(scrollView)
+        view.addSubview(navigationView)
+    }
+    
     private func setupLayout() {
         scrollView.flex.define { scrollView in
             scrollView.addItem(contentView).define { contentView in
@@ -198,14 +203,6 @@ extension HomeViewController {
         contentView.flex.layout()
         recommendStackView.flex.layout()
         scrollView.contentSize = contentView.frame.size
-    }
-}
-
-// MARK: - Add subviews
-extension HomeViewController {
-    private func addSubviews() {
-        view.addSubview(scrollView)
-        view.addSubview(navigationView)
     }
 }
 

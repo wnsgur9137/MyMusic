@@ -75,6 +75,11 @@ extension NavigationView {
 
 // MARK: - Layout
 extension NavigationView {
+    private func addSubviews() {
+        addSubview(blurView)
+        addSubview(contentView)
+    }
+    
     private func setupLayout() {
         contentView.flex
             .direction(.row)
@@ -99,13 +104,5 @@ extension NavigationView {
         contentView.flex.layout()
         
         pin.height(safeAreaInsets.top + contentViewHeight)
-    }
-}
-
-// MARK: - Add subviews
-extension NavigationView {
-    private func addSubviews() {
-        addSubview(blurView)
-        addSubview(contentView)
     }
 }

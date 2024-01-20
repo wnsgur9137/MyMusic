@@ -78,6 +78,10 @@ final class HomeContentView: UIView {
 
 // MARK: - Layout
 extension HomeContentView {
+    private func addSubviews() {
+        addSubview(rootFlexContainerView)
+    }
+    
     private func setupLayout() {
         rootFlexContainerView.flex.alignItems(.center).define { rootView in
             rootView.addItem(titleLabel)
@@ -96,24 +100,11 @@ extension HomeContentView {
     }
     
     private func setupSubviewLayout() {
-//        flex.height(self.height)
         pin.height(self.height)
         rootFlexContainerView.pin.all()
         rootFlexContainerView.flex.layout()
         if self.isUsedCollectionView {
             collectionView.pin.left().right()
-        }
-    }
-}
-
-// MARK: - Add Subivews
-extension HomeContentView {
-    private func addSubviews() {
-        addSubview(rootFlexContainerView)
-        for _ in 0..<2 {
-            let button = UIButton()
-            button.setTitle("test", for: .normal)
-            buttonStackView.addArrangedSubview(button)
         }
     }
 }

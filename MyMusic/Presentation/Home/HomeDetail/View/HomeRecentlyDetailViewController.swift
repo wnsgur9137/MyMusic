@@ -116,6 +116,11 @@ extension HomeRecentlyDetailViewController: HomeDetailTableViewDelegate {
 
 // MARK: - Layout
 extension HomeRecentlyDetailViewController {
+    func addSubviews() {
+        view.addSubview(mainView)
+        view.addSubview(navigationView)
+    }
+    
     private func setupSubviewLayout() {
         navigationView.pin
             .left()
@@ -125,13 +130,5 @@ extension HomeRecentlyDetailViewController {
         
         mainView.pin.all()
         mainView.flex.layout()
-    }
-}
-
-// MARK: - Add subviews
-extension HomeRecentlyDetailViewController {
-    func addSubviews() {
-        view.addSubview(mainView)
-        view.addSubview(navigationView)
     }
 }

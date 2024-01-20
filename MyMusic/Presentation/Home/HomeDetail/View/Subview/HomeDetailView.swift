@@ -61,7 +61,7 @@ final class HomeDetailView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .background
-        
+        addSubviews()
         setupLayout()
     }
     
@@ -71,8 +71,7 @@ final class HomeDetailView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        rootFlexContainerView.pin.all(self.pin.safeArea)
-        rootFlexContainerView.flex.layout()
+        setupSubviewLayout()
     }
 }
 
@@ -89,8 +88,11 @@ extension HomeDetailView {
 
 // MARK: - Layout
 extension HomeDetailView {
-    func setupLayout() {
+    func addSubviews() {
         addSubview(rootFlexContainerView)
+    }
+    
+    func setupLayout() {
         rootFlexContainerView.flex
             .alignItems(.center)
             .define { flex in
@@ -116,37 +118,8 @@ extension HomeDetailView {
         }
     }
     
-    func setupLayoutConstraints() {
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 24.0),
-            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            albumLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 12.0),
-            albumLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
-            albumLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
-            albumLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            artistLabel.topAnchor.constraint(equalTo: albumLabel.bottomAnchor, constant: 8.0),
-            artistLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            trackLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-            trackLabel.topAnchor.constraint(equalTo: artistLabel.bottomAnchor, constant: 24.0),
-            
-            trackTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            trackTableView.topAnchor.constraint(equalTo: trackLabel.bottomAnchor, constant: 8.0),
-            trackTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            trackTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-    }
-}
-
-// MARK: - Add subviews
-extension HomeDetailView {
-    func addSubviews() {
-        addSubview(imageView)
-        addSubview(albumLabel)
-        addSubview(artistLabel)
-        addSubview(trackLabel)
-        addSubview(trackTableView)
+    func setupSubviewLayout() {
+        rootFlexContainerView.pin.all(self.pin.safeArea)
+        rootFlexContainerView.flex.layout()
     }
 }

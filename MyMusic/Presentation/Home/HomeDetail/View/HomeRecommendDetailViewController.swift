@@ -116,6 +116,11 @@ extension HomeRecommendDetailViewController: HomeDetailTableViewDelegate {
 
 // MARK: - Layout
 extension HomeRecommendDetailViewController {
+    func addSubviews() {
+        view.addSubview(mainView)
+        view.addSubview(navigationView)
+    }
+    
     private func setupSubviewLayout() {
         navigationView.pin
             .left()
@@ -125,13 +130,5 @@ extension HomeRecommendDetailViewController {
         
         mainView.pin.all()
         mainView.flex.layout()
-    }
-}
-
-// MARK: - Add subviews
-extension HomeRecommendDetailViewController {
-    func addSubviews() {
-        view.addSubview(mainView)
-        view.addSubview(navigationView)
     }
 }

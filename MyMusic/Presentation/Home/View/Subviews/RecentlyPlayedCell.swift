@@ -13,8 +13,6 @@ import FlexLayout
 
 final class RecentlyPlayedCell: UICollectionViewCell {
     
-    private let rootFlexContainer = UIView()
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -33,13 +31,15 @@ final class RecentlyPlayedCell: UICollectionViewCell {
         let skeletonAnimation = SkeletonAnimationBuilder().makeSlidingAnimation(withDirection: .leftRight)
         imageView.showAnimatedGradientSkeleton(usingGradient: .init(colors: [.lightGray, .gray]), animation: skeletonAnimation)
         addSubviews()
-        setupLayoutConstraints()
-        
-//        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupSubviewLayout()
     }
 }
 
@@ -55,34 +55,11 @@ extension RecentlyPlayedCell {
 
 // MARK: - Layout
 extension RecentlyPlayedCell {
-    private func setupLayout() {
-        addSubview(rootFlexContainer)
-        rootFlexContainer.flex.define { flex in
-            flex.addItem(imageView)
-        }
-    }
-}
-
-// MARK: - Layout
-extension RecentlyPlayedCell {
-    private func setupLayoutConstraints() {
-        addSubview(rootFlexContainer)
-        rootFlexContainer.flex.define { flex in
-            flex.addItem(imageView)
-        }
-        
-        NSLayoutConstraint.activate([
-            imageView.leftAnchor.constraint(equalTo: leftAnchor),
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.rightAnchor.constraint(equalTo: rightAnchor),
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-    }
-}
-
-// MARK: - Add subviews
-extension RecentlyPlayedCell {
     private func addSubviews() {
         addSubview(imageView)
+    }
+    
+    private func setupSubviewLayout() {
+        imageView.pin.all()
     }
 }

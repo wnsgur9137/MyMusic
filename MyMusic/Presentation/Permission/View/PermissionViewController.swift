@@ -144,6 +144,14 @@ extension PermissionViewController {
 
 // MARK: - Layout
 extension PermissionViewController {
+    private func addSubviews() {
+        view.addSubview(backgroundImageView)
+        view.addSubview(titleView)
+        titleView.addSubview(titleLabel)
+        titleView.addSubview(subtitleLabel)
+        view.addSubview(permissionButton)
+    }
+    
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
             backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -165,16 +173,5 @@ extension PermissionViewController {
             permissionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             permissionButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
-    }
-}
-
-// MARK: - Add subview
-extension PermissionViewController {
-    private func addSubviews() {
-        view.addSubview(backgroundImageView)
-        view.addSubview(titleView)
-        titleView.addSubview(titleLabel)
-        titleView.addSubview(subtitleLabel)
-        view.addSubview(permissionButton)
     }
 }
